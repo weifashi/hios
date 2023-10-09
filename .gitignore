@@ -7,3 +7,4 @@ main
 /public/uploads/
 # .env
 output.log
+wsc.log
