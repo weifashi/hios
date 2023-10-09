@@ -1,0 +1,57 @@
+ErrAutoArchiveTime: Le dépôt automatique ne doit pas prendre moins de 1 jour!
+ErrAutoArchiveTimeInvalid: Le dépôt automatique ne doit pas durer moins d’un jour ou plus de 100 jours!
+ErrAutoArchiveTimeMax: Le dépôt automatique ne doit pas durer plus de 100 jours!
+ErrCaptchaCode: Code de vérification incorrect
+ErrChatSessionNotExist: La session n’existe pas ou a été supprimée
+ErrCmdTimeout: Délai d’exécution de la commande expire
+ErrConnFailed: Échec de connexion
+ErrDepartmentHead: Veuillez sélectionner le bon chef de département
+ErrDeptsInexistence: Le ministère n’existe pas ou a été supprimé
+ErrDeptsMaxRestrict: Un maximum de 200 départements peut être créé
+ErrDeptsNameLength: La longueur du nom du ministère est limitée de 2 à 20 mots
+ErrDeptsNameM: Le nom du ministère ne doit pas contenir :(M)
+ErrDeptsNameSpecialSymbol: Le nom du ministère ne doit pas contenir de symboles spéciaux
+ErrEmailAddress: Veuillez entrer une adresse e-mail correcte
+ErrEmailAddressError: Adresse e-mail incorrecte
+ErrEmailAddressExists: L’adresse e-mail existe déjà
+ErrEmailInconformity: Ne correspond pas à l’email de connexion actuel
+ErrEnvForbidden: Les circonstances actuelles interdisent la modification
+ErrEnvProhibition: L’environnement actuel interdit cette opération
+ErrExistSubDeptNotEdit: Contient un sous-département ne peut pas modifier le département supérieur
+ErrInputNewEmailAddress: Veuillez entrer une nouvelle adresse e-mail
+ErrInvalidParameter: Paramètres incorrects
+ErrInvitationCode: Veuillez entrer le code d’invitation correct
+ErrMailContentReject: Le contenu du message a été refusé, vérifiez que votre boîte aux lettres est active pour recevoir
+ErrMailHostEmpty: Le serveur SMTP ne peut pas être vide
+ErrMailNotConfig: Email d’envoi non configuré
+ErrMailPassEmpty: Le mot de passe SMTP ne peut pas être vide
+ErrMailPortEmpty: Le port SMTP ne peut pas être vide
+ErrMailToEmpty: L’adresse du destinataire ne peut pas être vide
+ErrMailToInvalid: Veuillez entrer l’adresse correcte du destinataire
+ErrMailUserEmpty: Le compte SMTP ne peut pas être vide
+ErrMaxSubDeptRestrict: Un maximum de 20 sous-départements peuvent être créés par département
+ErrMyMessage: '@mon message'
+ErrNoPermission: Aucune autorisation disponible
+ErrNotOpenReg: Inscription non ouverte
+ErrNotSupport: Mode de demande non pris en charge
+ErrOldEmailAddressAccord: Ne fonctionne pas avec l’ancienne boîte aux lettres
+ErrPasswordEnterFailed: Veuillez entrer le code d’accès
+ErrPasswordFailed: Compte ou mot de passe incorrect
+ErrRecordNotFound: L’enregistrement n’existe pas
+ErrRegFail: L’inscription a échoué
+ErrRegSuccess: Inscription réussie. Veuillez vérifier votre adresse e-mail avant de vous connecter
+ErrRegVerificationMailbox: Votre compte a déjà été enregistré, veuillez vérifier l’email
+ErrRequestDataEmpty: Les données demandées ne peuvent pas être vides
+ErrRequestDataInvalid: Les données demandées ne sont pas légales
+ErrRequestTimeout: La demande a expiré
+ErrTypeNotLogin: Pas de login
+ErrUpDeptsHierarchyError: Erreur hiérarchique du département supérieur
+ErrUpDeptsInexistence: Le service supérieur n’existe pas ou a été supprimé
+ErrUserEmailEmpty: L’email de l’utilisateur ne peut pas être vide
+ErrUserIdEmpty: L’id utilisateur ne peut pas être vide
+ErrUserNameEmpty: Le pseudo utilisateur ne peut pas être vide
+ErrUserNewPasswordEmpty: Utilisateur nouveau mot de passe ne peut pas être vide
+ErrUserOldPassword: Veuillez remplir l’ancien mot de passe correct
+ErrUserOldPasswordEmpty: Utilisateur l’ancien mot de passe ne peut pas être vide
+ErrUserPasswordSame: L’ancien et le nouveau mot de passe ne peuvent pas correspondre
+ErrUserTelEmpty: Le numéro de contact de l’utilisateur ne peut pas être vide

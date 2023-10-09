@@ -1,0 +1,57 @@
+ErrAutoArchiveTime: 자동 압축 시간은 최소 1일입니다!
+ErrAutoArchiveTimeInvalid: 자동 압축 시간은 최소 1일 또는 100일 이상이어야 합니다!
+ErrAutoArchiveTimeMax: 자동 압축 시간은 100일 이상이어야 합니다!
+ErrCaptchaCode: 인증 코드 오류
+ErrChatSessionNotExist: 세션이 존재하지 않거나 삭제되었습니다
+ErrCmdTimeout: 명령 실행 시간이 초과되었습니다
+ErrConnFailed: 연결 실패
+ErrDepartmentHead: 적합한 부서장을 뽑으십시오
+ErrDeptsInexistence: 부서가 존재하지 않거나 이미 삭제되었다
+ErrDeptsMaxRestrict: 최대 200개의 부처만 만들 수 있다
+ErrDeptsNameLength: 부문명칭은 2-20자로 제한되여있다
+ErrDeptsNameM: 부문명칭에는 다음과 같은 내용이 포함되여서는 안된다.
+ErrDeptsNameSpecialSymbol: 부문명에는 특수부호가 포함되지 않는다
+ErrEmailAddress: 정확한 우편함 주소를 입력해 주세요
+ErrEmailAddressError: 메일 주소 오류
+ErrEmailAddressExists: 전자 우편 주소가 이미 존재합니다
+ErrEmailInconformity: 현재 로그인 메일함과 일치하지 않습니다
+ErrEnvForbidden: 현재 환경에서는 수정을 금지한다
+ErrEnvProhibition: 현재 환경에서는 사용하지 않습니다
+ErrExistSubDeptNotEdit: 하위 부서를 포함해서 상위 부서를 수정할 수 없다
+ErrInputNewEmailAddress: 새 이메일 주소를 입력하십시오
+ErrInvalidParameter: 인자 오류
+ErrInvitationCode: 올바른 초대번호를 입력해주세요
+ErrMailContentReject: 전자메일 내용이 거부되었습니다. 메일함의 수신이 켜져 있는지 확인하십시오
+ErrMailHostEmpty: smtp 서버가 비어 있을 수 없습니다
+ErrMailNotConfig: 보내는 편지함이 설정되지 않았습니다
+ErrMailPassEmpty: smtp 비밀번호는 비어 있을 수 없습니다
+ErrMailPortEmpty: smtp 포트가 비어 있을 수 없습니다
+ErrMailToEmpty: 받는 사람의 주소가 비어 있을 수 없습니다
+ErrMailToInvalid: 정확한 수취인 주소를 입력해 주세요
+ErrMailUserEmpty: smtp 계정은 비어 있을 수 없습니다
+ErrMaxSubDeptRestrict: 각 부서당 최대 20개의 부처를 만들 수 있다
+ErrMyMessage: '@ 나의 메시지'
+ErrNoPermission: 권한 없음
+ErrNotOpenReg: 미공개 등록
+ErrNotSupport: 지원되지 않는 요청 방식입니다
+ErrOldEmailAddressAccord: 이전 편지함과 일치할 수 없습니다
+ErrPasswordEnterFailed: 로그인 비밀번호를 입력하십시오
+ErrPasswordFailed: 계좌번호와 비밀번호가 잘못되었습니다
+ErrRecordNotFound: 기록이 존재하지 않습니다.
+ErrRegFail: 등록 실패
+ErrRegSuccess: 등록했습니다. 메일 확인 후 로그인해주세요
+ErrRegVerificationMailbox: 계정이 이미 가입되어 있습니다. 이메일을 확인하십시오
+ErrRequestDataEmpty: 요청한 데이터가 비어 있을 수 없습니다
+ErrRequestDataInvalid: 요청한 데이터가 올바르지 않습니다
+ErrRequestTimeout: 요청 시간 초과
+ErrTypeNotLogin: 로그인하지 않음
+ErrUpDeptsHierarchyError: 상급 부서 차원의 오류
+ErrUpDeptsInexistence: 상급 기관은 존재하지 않거나 삭제되어 있다
+ErrUserEmailEmpty: 사용자 편지함은 비어 있을 수 없습니다
+ErrUserIdEmpty: 사용자 id 가 비어 있을 수 없습니다
+ErrUserNameEmpty: 사용자 닉네임은 비어 있을 수 없습니다
+ErrUserNewPasswordEmpty: 사용자의 새 비밀번호가 비어 있어서는 안 됩니다
+ErrUserOldPassword: 옛 비밀번호를 정확하게 기입해 주세요
+ErrUserOldPasswordEmpty: 사용자의 이전 비밀번호는 비어 있을 수 없습니다
+ErrUserPasswordSame: 새 암호와 이전 암호가 일치하지 않습니다
+ErrUserTelEmpty: 사용자 연락처가 비어 있으면 안 됩니다

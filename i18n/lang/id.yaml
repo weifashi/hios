@@ -1,0 +1,57 @@
+ErrAutoArchiveTime: Otomatis arsip harus tidak kurang dari satu hari!
+ErrAutoArchiveTimeInvalid: Masa pengajuan otomatis hendaknya tidak kurang dari satu hari atau lebih dari 100 hari!
+ErrAutoArchiveTimeMax: Berkas otomatis tidak harus lebih dari 100 hari!
+ErrCaptchaCode: Galat captcha
+ErrChatSessionNotExist: Sesi tidak ada atau telah dihapus
+ErrCmdTimeout: Waktu habis untuk perintah
+ErrConnFailed: Koneksi gagal
+ErrDepartmentHead: Silahkan pilih kepala departemen yang tepat
+ErrDeptsInexistence: Division tidak ada atau telah dihapus
+ErrDeptsMaxRestrict: Paling banyak, 200 divisi
+ErrDeptsNameLength: Nama departemen dibatasi hingga 20 kata
+ErrDeptsNameM: Nama departemen tidak boleh berisi :(M)
+ErrDeptsNameSpecialSymbol: Nama departemen tidak boleh berisi simbol khusus
+ErrEmailAddress: Silakan masukkan alamat email yang benar
+ErrEmailAddressError: Kesalahan alamat email
+ErrEmailAddressExists: Alamat email sudah ada
+ErrEmailInconformity: Tidak cocok dengan akun email login saat ini
+ErrEnvForbidden: Lingkungan saat ini melarang perubahan
+ErrEnvProhibition: Lingkungan saat ini melarang operasi ini
+ErrExistSubDeptNotEdit: Sub-division tidak bisa mengubah divisi atas
+ErrInputNewEmailAddress: Silakan masukkan alamat email baru
+ErrInvalidParameter: Argumen salah
+ErrInvitationCode: Mohon masukkan kode undangan yang benar
+ErrMailContentReject: Pesan ditolak, cek apakah kotak masuk sudah diaktifkan untuk menerima
+ErrMailHostEmpty: Server SMTP tidak bisa kosong
+ErrMailNotConfig: Kirim email tak dikonfigurasi
+ErrMailPassEmpty: Kata sandi SMTP tidak bisa kosong
+ErrMailPortEmpty: Pangkalan SMTP tidak bisa kosong
+ErrMailToEmpty: Alamat penerima tidak boleh kosong
+ErrMailToInvalid: Silahkan masukkan alamat penerima yang benar
+ErrMailUserEmpty: Akun SMTP tidak bisa kosong
+ErrMaxSubDeptRestrict: Setiap departemen hanya bisa membuat 20 unit anak paling banyak
+ErrMyMessage: pesanku
+ErrNoPermission: Tidak ada izin
+ErrNotOpenReg: Pendaftaran tidak dibuka
+ErrNotSupport: Permintaan tak didukung
+ErrOldEmailAddressAccord: Tidak dapat konsisten dengan kotak surat tua
+ErrPasswordEnterFailed: Silakan masukkan password log masuk
+ErrPasswordFailed: Nomor rekening atau kata sandi yang salah
+ErrRecordNotFound: Catatan itu tidak ada.
+ErrRegFail: Gagal mendaftar
+ErrRegSuccess: Pendaftaran telah sukses. Masuk setelah memeriksa email anda
+ErrRegVerificationMailbox: Akun anda sudah terdaftar, mohon verifikasi email anda
+ErrRequestDataEmpty: Permintaan data tidak bisa kosong
+ErrRequestDataInvalid: Data permintaan tidak sah
+ErrRequestTimeout: Waktu permintaan
+ErrTypeNotLogin: Tidak login
+ErrUpDeptsHierarchyError: Ada kesalahan di tingkat atas
+ErrUpDeptsInexistence: Tak ada yang lebih tinggi atau telah dihapus
+ErrUserEmailEmpty: Kotak pesan pengguna tidak bisa kosong
+ErrUserIdEmpty: ID pengguna tidak bisa kosong
+ErrUserNameEmpty: Nama panggilan pengguna tidak bisa kosong
+ErrUserNewPasswordEmpty: Password baru pengguna tidak bisa kosong
+ErrUserOldPassword: Tolong isi sandi lama yang benar
+ErrUserOldPasswordEmpty: Password pengguna lama tidak bisa kosong
+ErrUserPasswordSame: Sandi lama yang baru tidak cocok
+ErrUserTelEmpty: Nomor kontak pengguna tidak bisa kosong
