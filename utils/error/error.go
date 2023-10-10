@@ -1,8 +1,6 @@
 package error
 
 import (
-	"hios/i18n"
-
 	"github.com/pkg/errors"
 )
 
@@ -16,11 +14,11 @@ type WithError struct {
 func (e WithError) Error() string {
 	content := ""
 	if e.Detail != nil {
-		content = i18n.GetErrMsg(e.Msg, map[string]any{"detail": e.Detail})
+		content = e.Msg
 	} else if e.Map != nil {
-		content = i18n.GetErrMsg(e.Msg, e.Map)
+		content = e.Msg
 	} else {
-		content = i18n.GetErrMsg(e.Msg, nil)
+		content = e.Msg
 	}
 	if content == "" {
 		if e.Err != nil {

@@ -2,8 +2,6 @@ package helper
 
 import (
 	"fmt"
-	"hios/app/constant"
-	"hios/i18n"
 	"net/http"
 	"net/url"
 	"strings"
@@ -112,12 +110,10 @@ func Error(c *gin.Context, values ...any) {
 
 // ErrorWith 失败信息
 func ErrorWith(c *gin.Context, msgKey string, err error, values ...any) {
-	msgDetail := i18n.GetMsgWithMap(msgKey, map[string]any{"detail": err})
-	Response(c, http.StatusBadRequest, msgDetail, values...)
+	Response(c, http.StatusBadRequest, err.Error(), values...)
 }
 
 // ErrorAuth 身份失败
 func ErrorAuth(c *gin.Context, values ...any) {
-	msgDetail := i18n.GetMsgWithMap(constant.ErrTypeNotLogin, map[string]any{"detail": nil})
-	Response(c, http.StatusUnauthorized, msgDetail, values...)
+	Response(c, http.StatusUnauthorized, "", values...)
 }

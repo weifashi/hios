@@ -10,6 +10,18 @@ import (
 	"time"
 )
 
+// Cmd 执行命令
+func Cmd(arg ...string) (string, error) {
+	output, err := exec.Command("/bin/sh", arg...).CombinedOutput()
+	return string(output), err
+}
+
+// Bash 执行命令
+func Bash(arg ...string) (string, error) {
+	output, err := exec.Command("/bin/bash", arg...).CombinedOutput()
+	return string(output), err
+}
+
 func Exec(cmdStr string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()

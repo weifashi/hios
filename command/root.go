@@ -5,7 +5,6 @@ import (
 	"hios/config"
 	"hios/core"
 	"hios/database"
-	"hios/i18n"
 	"hios/router"
 	"hios/router/middleware"
 	"hios/utils/common"
@@ -16,7 +15,6 @@ import (
 	"time"
 
 	"github.com/gin-contrib/gzip"
-	ginI18n "github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
@@ -88,10 +86,6 @@ var rootCommand = &cobra.Command{
 			r.Use(middleware.CustomLogger())
 			r.Use(middleware.OperationLog())
 			r.Use(gzip.Gzip(gzip.DefaultCompression))
-			r.Use(i18n.GinI18nLocalize())
-			r.SetFuncMap(template.FuncMap{
-				"Localize": ginI18n.GetMessage,
-			})
 			r.SetHTMLTemplate(t)
 			r.Any("/*path", func(context *gin.Context) {
 				router.Init(context)
