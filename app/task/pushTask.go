@@ -12,10 +12,13 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
 )
+
+var pushTaskMutex sync.Mutex
 
 // 推送任务
 var PushTask = pushTask{}
@@ -30,6 +33,7 @@ func init() {
 
 // 开始
 func (t pushTask) Start(param interface{}, retryOffline ...bool) {
+	//
 	retryOfflines := true
 	if len(retryOffline) > 0 {
 		retryOfflines = retryOffline[0]
@@ -132,6 +136,7 @@ func (t pushTask) insertWebSocketTmpMsg(inArray model.WebSocketTmpMsg) error {
 // key: 延迟推送 key 依据，留空立即推送（延迟推送时发给同一人同一种消息类型只发送最新的一条）
 // delay: 延迟推送时间，默认：1 秒（key 填写时有效）
 func (t pushTask) push(lists []map[string]interface{}, retryOffline bool, key string, delay int) {
+	//
 	if len(lists) == 0 {
 		return
 	}
@@ -220,23 +225,34 @@ func (t pushTask) push(lists []map[string]interface{}, retryOffline bool, key st
 
 // 推送消息
 func (t pushTask) PushMsg(fd int, msg interface{}) {
-	log.Println("推送任务所有连接列表:", interfaces.WsClients)
+	//
+	log.Println("推送任务所有连接列表:", common.StructToJson(interfaces.WsClients))
 	for _, v := range interfaces.WsClients {
 		if v.Rid == int32(fd) {
 			log.Println("推送消息给fd:", v.Rid)
-			log.Printf("推送消息内容:%v", msg)
+			log.Printf("推送消息内容:%s", common.StructToJson(msg))
 			msgJSON, err := json.Marshal(msg)
 			if err != nil {
 				log.Println("Failed to convert message to JSON:", err)
 				continue
 			}
-			if v.Conn != nil && v.Conn.UnderlyingConn() != nil {
-				if err := v.Conn.WriteMessage(websocket.TextMessage, msgJSON); err != nil {
-					if !websocket.IsCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-						log.Println(err)
-					}
-				}
+			go t.pushWriteMessage(v, msgJSON)
+		}
+	}
+}
+
+// 写入消息
+func (t pushTask) pushWriteMessage(v interfaces.WsClient, msgJSON []byte) {
+	pushTaskMutex.Lock()
+	defer pushTaskMutex.Unlock()
+	// for data := range sendChan {
+	if v.Conn != nil && v.Conn.UnderlyingConn() != nil {
+		if err := v.Conn.WriteMessage(websocket.TextMessage, msgJSON); err != nil {
+			if !websocket.IsCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Println(err.Error())
 			}
 		}
 	}
+	// }
+
 }

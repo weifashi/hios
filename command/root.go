@@ -59,8 +59,6 @@ var rootCommand = &cobra.Command{
 			common.PrintError(fmt.Sprintf("数据库初始化失败: %s", err.Error()))
 			os.Exit(1)
 		}
-		//
-		common.PrintSuccess("启动成功: http://localhost:" + config.CONF.System.Port)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -91,6 +89,8 @@ var rootCommand = &cobra.Command{
 				router.Init(context)
 			})
 			_ = r.Run(fmt.Sprintf("%s:%s", config.CONF.System.Host, config.CONF.System.Port))
+			//
+			common.PrintSuccess("启动成功: http://localhost:" + config.CONF.System.Port)
 		}
 
 	},

@@ -77,7 +77,7 @@ func (ws webSocketService) PushPath(path string) {
 			},
 		}
 		// 发送消息任务
-		core.GlobalEventBus.Publish("Task.PushTask.Start", params)
+		go core.GlobalEventBus.Publish("Task.PushTask.Start", params)
 	}
 }
 

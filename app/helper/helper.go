@@ -110,7 +110,11 @@ func Error(c *gin.Context, values ...any) {
 
 // ErrorWith 失败信息
 func ErrorWith(c *gin.Context, msgKey string, err error, values ...any) {
-	Response(c, http.StatusBadRequest, err.Error(), values...)
+	if err != nil {
+		Response(c, http.StatusBadRequest, err.Error(), values...)
+	} else {
+		Response(c, http.StatusBadRequest, "error", values...)
+	}
 }
 
 // ErrorAuth 身份失败

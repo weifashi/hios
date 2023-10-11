@@ -72,7 +72,7 @@ func WorkStart() {
 	ws = wsc.New(origin)
 	// 自定义配置
 	ws.SetConfig(&wsc.Config{
-		WriteWait:         10 * time.Second,
+		WriteWait:         2 * time.Second,
 		MaxMessageSize:    512 * 1024, // 512KB
 		MinRecTime:        3 * time.Second,
 		MaxRecTime:        30 * time.Second,
@@ -86,13 +86,13 @@ func WorkStart() {
 		// onConnected()
 	})
 	ws.OnConnectError(func(err error) {
-		logger.Debug("[ws] connect error: ", err.Error())
+		logger.Error("[ws] connect error: ", err.Error())
 	})
 	ws.OnDisconnected(func(err error) {
-		logger.Debug("[ws] disconnected: ", err.Error())
+		logger.Error("[ws] disconnected: ", err.Error())
 	})
 	ws.OnClose(func(code int, text string) {
-		logger.Debug("[ws] close: ", code, text)
+		logger.Info("[ws] close: ", code, text)
 		done <- true
 	})
 	ws.OnTextMessageSent(func(message string) {
@@ -101,16 +101,16 @@ func WorkStart() {
 		}
 	})
 	ws.OnBinaryMessageSent(func(data []byte) {
-		logger.Debug("[ws] binary message sent: ", string(data))
+		logger.Info("[ws] binary message sent: ", string(data))
 	})
 	ws.OnSentError(func(err error) {
-		logger.Debug("[ws] sent error: ", err.Error())
+		logger.Info("[ws] sent error: ", err.Error())
 	})
 	ws.OnPingReceived(func(appData string) {
-		logger.Debug("[ws] ping received: ", appData)
+		logger.Info("[ws] ping received: ", appData)
 	})
 	ws.OnPongReceived(func(appData string) {
-		logger.Debug("[ws] pong received: ", appData)
+		logger.Info("[ws] pong received: ", appData)
 	})
 	ws.OnTextMessageReceived(func(message string) {
 		logger.Info("[ws] text message received: ", message)
