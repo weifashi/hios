@@ -226,7 +226,6 @@ func (t pushTask) push(lists []map[string]interface{}, retryOffline bool, key st
 // 推送消息
 func (t pushTask) PushMsg(fd int, msg interface{}) {
 	//
-	log.Println("推送任务所有连接列表:", common.StructToJson(interfaces.WsClients))
 	for _, v := range interfaces.WsClients {
 		if v.Rid == int32(fd) {
 			log.Println("推送消息给fd:", v.Rid)

@@ -1,4 +1,4 @@
-package websocket
+package service
 
 import (
 	"crypto/md5"

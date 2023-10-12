@@ -30,13 +30,16 @@ func Init(c *gin.Context) {
 		if callApiMethod(api, false) {
 			return
 		}
-		// 登录验证
-		// userInfo, err := providers.UserProviders.VerifyLogin(api.Token)
-		// if err != nil {
-		// 	helper.ErrorAuth(c, err.Error())
-		// 	return
-		// }
-		// api.Userinfo = userInfo
+
+		// 检查请求是否来自本地
+		// 如果不是本地请求，则返回 403 Forbidden
+		clientIP := c.ClientIP()
+		isLocal := strings.HasPrefix(clientIP, "127.0.0.1") || strings.HasPrefix(clientIP, "::1")
+		if !isLocal {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
 		// 动态路由（需要登录）
 		if callApiMethod(api, true) {
 			return

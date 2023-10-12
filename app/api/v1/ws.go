@@ -6,7 +6,7 @@ import (
 	"hios/app/constant"
 	"hios/app/helper"
 	"hios/app/interfaces"
-	service "hios/app/service/websocket"
+	"hios/app/service"
 	"hios/core"
 	"net/http"
 	"strconv"
@@ -80,6 +80,7 @@ func (api *BaseApi) Ws() {
 			api.wsOfflineClients(client.Rid)
 			break
 		}
+
 		var msg interfaces.WsMsg
 		err = json.Unmarshal(message, &msg)
 		if err != nil {

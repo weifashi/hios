@@ -62,7 +62,7 @@ func WorkStart() {
 	//
 	initWorkDir()
 	//
-	logger.SetLogger(`{"File":{"filename":"work/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`)
+	logger.SetLogger(`{"File":{"filename":"work/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`)
 	//
 	origin := strings.Replace(config.CONF.System.WssUrl, "https://", "wss://", 1)
 	origin = strings.Replace(origin, "http://", "ws://", 1)
@@ -96,9 +96,9 @@ func WorkStart() {
 		done <- true
 	})
 	ws.OnTextMessageSent(func(message string) {
-		if !strings.HasPrefix(message, "r:") {
-			logger.Debug("[ws] text message sent: ", message)
-		}
+		// if !strings.HasPrefix(message, "r:") {
+		// 	logger.Debug("[ws] text message sent: ", message)
+		// }
 	})
 	ws.OnBinaryMessageSent(func(data []byte) {
 		logger.Info("[ws] binary message sent: ", string(data))
@@ -140,6 +140,8 @@ func initWorkDir() {
 		logger.Error(fmt.Sprintf("[start] failed to create log dir: %s\n", err.Error()))
 		os.Exit(1)
 	}
+	//
+	common.Mkdir(workDir+"/logs", 0777)
 }
 
 // 处理消息
