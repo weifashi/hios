@@ -23,17 +23,3 @@ type WsMsg struct {
 	Uid  int32  `json:"uid"`  // 客户端用户ID（会员ID）
 	Rid  int32  `json:"rid"`  // 客户端序号ID（WebSocket ID）
 }
-
-const (
-	WsHeartbeat = 0 // 心跳
-	WsOnline    = 1 // 连接
-	WsOffline   = 2 // 断开
-	WsSendMsg   = 3 // 消息发送
-
-	WsIsUser    = "user"    // 会员
-	WsIsUnknown = "unknown" // 未知
-)
-
-var (
-	WsClients []WsClient
-)

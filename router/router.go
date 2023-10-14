@@ -23,7 +23,7 @@ func Init(c *gin.Context) {
 		// 读取身份
 		api := &v1.BaseApi{
 			Route:   urlToApiRoute(urlPath[8:]),
-			Token:   helper.Token(c), // todo 判断Token是否有效
+			Token:   helper.ApiRequest.Token(c), // todo 判断Token是否有效
 			Context: c,
 		}
 		// 动态路由（不需要登录）

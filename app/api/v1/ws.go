@@ -30,27 +30,27 @@ var (
 // @Description 请使用ws连接
 // @Accept json
 // @Param request query interfaces.WebsocketReq true "request"
-// @Router /ws [get]
+// @Router /api/v1/ws [get]
 func (api *BaseApi) Ws() {
 	if api.Context.Request.Header.Get("Upgrade") != "websocket" {
-		helper.ErrorWith(api.Context, constant.ErrNotSupport, nil)
+		helper.ApiResponse.ErrorWith(api.Context, constant.ErrNotSupport, nil)
 		return
 	}
 	conn, err := wsUpgrader.Upgrade(api.Context.Writer, api.Context.Request, nil)
 	if err != nil {
-		helper.ErrorWith(api.Context, constant.ErrConnFailed, err)
+		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, err)
 		return
 	}
 
 	wsRid++
 	client := interfaces.WsClient{
 		Conn: conn,
-		Type: interfaces.WsIsUnknown,
+		Type: constant.WsIsUnknown,
 		Uid:  0,
 		Rid:  wsRid,
 	}
 	if api.Token != "" {
-		client.Type = interfaces.WsIsUser
+		client.Type = constant.WsIsUser
 		if api.Userinfo != nil {
 			client.Uid = int32(api.Userinfo.Userid)
 		}
@@ -89,14 +89,14 @@ func (api *BaseApi) Ws() {
 		if msg.Data == nil {
 			msg.Data = make(map[string]any)
 		}
-		if msg.Action == interfaces.WsHeartbeat {
+		if msg.Action == constant.WsHeartbeat {
 			// 心跳消息
 			go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", int(client.Rid), map[string]any{
-				"type": interfaces.WsHeartbeat,
+				"type": constant.WsHeartbeat,
 			})
 			continue
 		}
-		if client.Type == interfaces.WsIsUser {
+		if client.Type == constant.WsIsUser {
 			// 用户消息
 			api.wsHandleUserMsg(client, msg)
 		}
@@ -107,7 +107,7 @@ func (api *BaseApi) Ws() {
 // 处理用户消息
 func (api *BaseApi) wsHandleUserMsg(client interfaces.WsClient, msg interfaces.WsMsg) {
 	fmt.Printf("客户端消息：%v %v\n", client, msg)
-	if msg.Action == interfaces.WsSendMsg {
+	if msg.Action == constant.WsSendMsg {
 		// 消息发送
 		toType, _ := msg.Data.(map[string]interface{})["type"].(string) // 客户端类型
 		toUid, _ := msg.Data.(map[string]interface{})["uid"].(float64)  // 发送给谁
@@ -125,13 +125,13 @@ func (api *BaseApi) wsHandleUserMsg(client interfaces.WsClient, msg interfaces.W
 			})
 		}
 		sendMsg := interfaces.WsMsg{
-			Action: interfaces.WsSendMsg,
+			Action: constant.WsSendMsg,
 			Data:   msgData,
 			Type:   client.Type,
 			Uid:    client.Uid,
 			Rid:    client.Rid,
 		}
-		for _, v := range interfaces.WsClients {
+		for _, v := range core.WsClients {
 			if v.Type == toType && v.Uid == int32(toUid) {
 				go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", toUid, sendMsg)
 			}
@@ -145,14 +145,12 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	defer wsMutex.Unlock()
 
 	//
-	for _, v := range interfaces.WsClients {
+	for _, v := range core.WsClients {
 		if v.Rid == client.Rid {
 			return
 		}
 	}
-	interfaces.WsClients = append(interfaces.WsClients, client)
-	// 处理上线事件
-	fmt.Printf("处理上线事件：%v \n", client)
+	core.WsClients = append(core.WsClients, client)
 
 	// 保存用户
 	service.WebSocketService.SaveUser(int(client.Rid), int(client.Uid))
@@ -176,12 +174,10 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 func (api *BaseApi) wsOfflineClients(rid int32) {
 	wsMutex.Lock()
 	defer wsMutex.Unlock()
-	for k, client := range interfaces.WsClients {
+	for k, client := range core.WsClients {
 		if client.Rid == rid {
-			interfaces.WsClients = append(interfaces.WsClients[:k], interfaces.WsClients[k+1:]...)
+			core.WsClients = append(core.WsClients[:k], core.WsClients[k+1:]...)
 			_ = client.Conn.Close()
-			// 处理离线事件
-			fmt.Printf("处理离线事件：%v \n", client)
 			// 通知离线
 			go core.GlobalEventBus.Publish("Task.LineTask.Start", int(client.Uid), false)
 			// 清除用户

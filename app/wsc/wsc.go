@@ -57,6 +57,8 @@ type callModel struct {
 	Err      string `json:"err"`
 }
 
+// go run main.go --wss='ws://127.0.0.1:3376/api/v1/ws'
+//
 // WorkStart Work开始
 func WorkStart() {
 	//
@@ -145,36 +147,50 @@ func initWorkDir() {
 }
 
 // 处理消息
-func handleMessageReceived(message string) {
+func handleMessageReceived(message string) (string, error) {
 	var data msgModel
 	if ok := json.Unmarshal([]byte(message), &data); ok == nil {
+
 		if data.Type == "file" {
 			// 保存文件
-			handleMessageFile(data.File, false)
+			output, err := handleMessageFile(data.File, false)
+			if err != nil {
+				return output, err
+			}
+			// 	callData := &callModel{
+			// 		Callback: data.Cmd.Callback,
+			// 		Output:   output,
+			// 		Err:      cmderr}
+			// 	sendMessage := formatSendMsg("cmd", callData)
+			// 	err = ws.SendTextMessage(sendMessage)
+
 		} else if data.Type == "cmd" {
 			// 执行命令
-			output, err := handleMessageCmd(data.Cmd.Content, data.Cmd.Log, data.Cmd.Loguid)
-			if len(data.Cmd.Callback) > 0 {
-				cmderr := ""
-				if err != nil {
-					cmderr = err.Error()
-				}
-				callData := &callModel{
-					Callback: data.Cmd.Callback,
-					Output:   output,
-					Err:      cmderr}
-				sendMessage := formatSendMsg("cmd", callData)
-				err = ws.SendTextMessage(sendMessage)
-				if err != nil {
-					logger.Debug("[cmd] send callback error: %s", err)
-				}
-			}
+			return handleMessageCmd(data.Cmd.Content, data.Cmd.Log, data.Cmd.Loguid)
+			// return output, err
+			// if len(data.Cmd.Callback) > 0 {
+			// 	cmderr := ""
+			// 	if err != nil {
+			// 		cmderr = err.Error()
+			// 	}
+			// 	callData := &callModel{
+			// 		Callback: data.Cmd.Callback,
+			// 		Output:   output,
+			// 		Err:      cmderr}
+			// 	sendMessage := formatSendMsg("cmd", callData)
+			// 	err = ws.SendTextMessage(sendMessage)
+			// 	if err != nil {
+			// 		logger.Debug("[cmd] send callback error: %s", err)
+			// 	}
+			// }
 		}
 	}
+
+	return "", nil
 }
 
 // 保存文件或运行文件
-func handleMessageFile(fileData fileModel, force bool) {
+func handleMessageFile(fileData fileModel, force bool) (string, error) {
 	var err error
 	var output string
 	if !strings.HasPrefix(fileData.Path, "/") {
@@ -185,14 +201,15 @@ func handleMessageFile(fileData fileModel, force bool) {
 		err = os.MkdirAll(fileDir, os.ModePerm)
 		if err != nil {
 			logger.Error("#%s# [file] mkdir error: '%s' %s", fileData.Loguid, fileDir, err)
-			return
+			return "", err
 		}
 	}
 	fileContent := fileData.Content
 	if fileContent == "" {
 		logger.Warn("#%s# [file] empty: %s", fileData.Loguid, fileData.Path)
-		return
+		return "", err
 	}
+
 	//
 	fileKey := common.StringMd5(fileData.Path)
 	contentKey := common.StringMd5(fileContent)
@@ -200,7 +217,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 		md5Value, _ := FileMd5.Load(fileKey)
 		if md5Value != nil && md5Value.(string) == contentKey {
 			logger.Debug("#%s# [file] same: %s", fileData.Loguid, fileData.Path)
-			return
+			return "", nil
 		}
 	}
 	FileMd5.Store(fileKey, contentKey)
@@ -210,7 +227,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 		err = os.WriteFile(beforeFile, []byte(fileData.Before), 0666)
 		if err != nil {
 			logger.Error("#%s# [before] write before error: '%s' %s", fileData.Loguid, beforeFile, err)
-			return
+			return "", err
 		}
 		logger.Info("#%s# [before] start: '%s'", fileData.Loguid, beforeFile)
 		_, _ = cmd.Bash("-c", fmt.Sprintf("chmod +x %s", beforeFile))
@@ -225,7 +242,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 	err = os.WriteFile(fileData.Path, []byte(fileContent), 0666)
 	if err != nil {
 		logger.Error("#%s# [file] write error: '%s' %s", fileData.Loguid, fileData.Path, err)
-		return
+		return "", err
 	}
 	if common.InArray(fileData.Type, []string{"bash", "cmd", "exec"}) {
 		logger.Info("#%s# [bash] start: '%s'", fileData.Loguid, fileData.Path)
@@ -233,6 +250,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 		output, err = cmd.Bash(fileData.Path)
 		if err != nil {
 			logger.Error("#%s# [bash] error: '%s' %s %s", fileData.Path, err, output)
+			return "", err
 		} else {
 			logger.Info("#%s# [bash] success: '%s'", fileData.Loguid, fileData.Path)
 		}
@@ -242,6 +260,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 		output, err = cmd.Cmd(fileData.Path)
 		if err != nil {
 			logger.Error("#%s# [sh] error: '%s' %s %s", fileData.Path, err, output)
+			return "", err
 		} else {
 			logger.Info("#%s# [sh] success: '%s'", fileData.Loguid, fileData.Path)
 		}
@@ -250,6 +269,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 		output, err = cmd.Cmd("-c", fmt.Sprintf("cd %s && docker-compose up -d --remove-orphans", fileDir))
 		if err != nil {
 			logger.Error("#%s# [yml] error: '%s' %s %s", fileData.Loguid, fileData.Path, err, output)
+			return "", err
 		} else {
 			logger.Info("#%s# [yml] success: '%s'", fileData.Loguid, fileData.Path)
 		}
@@ -258,6 +278,7 @@ func handleMessageFile(fileData fileModel, force bool) {
 		output, err = cmd.Cmd("-c", "nginx -s reload")
 		if err != nil {
 			logger.Error("#%s# [nginx] error: '%s' %s %s", fileData.Loguid, fileData.Path, err, output)
+			return "", err
 		} else {
 			logger.Info("#%s# [nginx] success: '%s'", fileData.Loguid, fileData.Path)
 		}
@@ -268,17 +289,20 @@ func handleMessageFile(fileData fileModel, force bool) {
 		err = os.WriteFile(afterFile, []byte(fileData.After), 0666)
 		if err != nil {
 			logger.Error("#%s# [after] write after error: '%s' %s", fileData.Loguid, afterFile, err)
-			return
+			return "", err
 		}
 		logger.Info("#%s# [after] start: '%s'", fileData.Loguid, afterFile)
 		_, _ = cmd.Bash("-c", fmt.Sprintf("chmod +x %s", afterFile))
-		output, err = cmd.Bash(afterFile)
+		outputs, err := cmd.Bash(afterFile)
 		if err != nil {
-			logger.Error("#%s# [after] error: '%s' %s %s", fileData.Loguid, afterFile, err, output)
+			logger.Error("#%s# [after] error: '%s' %s %s", fileData.Loguid, afterFile, err, outputs)
+			return "", err
 		} else {
 			logger.Info("#%s# [after] success: '%s'", fileData.Loguid, afterFile)
 		}
 	}
+
+	return output, nil
 }
 
 // 运行自定义脚本

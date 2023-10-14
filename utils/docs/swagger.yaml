@@ -1,0 +1,84 @@
+basePath: /api/v1
+definitions:
+  interfaces.Response:
+    properties:
+      code:
+        description: 状态, [200=成功, 400=失败, 401=未登录, 403=无相关权限, 404=请求接口不存在, 405=请求方法不允许,
+          500=系统错误]
+        type: integer
+      data:
+        description: 数据
+      msg:
+        description: 信息
+        type: string
+    type: object
+  interfaces.SeedReq:
+    properties:
+      code:
+        description: 邮箱验证码
+        type: string
+      email:
+        description: 帐号邮箱
+        type: string
+      password:
+        description: 注销理由
+        type: string
+      reason:
+        description: 注销理由
+        type: string
+      type:
+        description: 类型
+        type: string
+    required:
+    - code
+    - email
+    - password
+    - reason
+    - type
+    type: object
+host: http://localhost
+info:
+  contact: {}
+  description: hios是一款轻量级的开源在线项目文件管理工具，提供各类文档协作工具。
+  license:
+    name: AGPL-3.0 license
+    url: http://www.gnu.org/licenses/
+  termsOfService: https://file.weifashi.cn/
+  title: hios
+  version: "1.0"
+paths:
+  /api/v1/seed:
+    post:
+      consumes:
+      - application/json
+      description: 发送消息
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/interfaces.SeedReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/interfaces.Response'
+      summary: 发送消息
+  /api/v1/ws:
+    get:
+      consumes:
+      - application/json
+      description: 请使用ws连接
+      parameters:
+      - in: query
+        name: language
+        type: string
+      - in: query
+        name: token
+        type: string
+      responses: {}
+      summary: Websocket ws
+      tags:
+      - Websocket
+swagger: "2.0"
