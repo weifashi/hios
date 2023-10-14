@@ -244,7 +244,6 @@ func (t pushTask) PushMsg(fd int, msg interface{}) {
 func (t pushTask) pushWriteMessage(v interfaces.WsClient, msgJSON []byte) {
 	pushTaskMutex.Lock()
 	defer pushTaskMutex.Unlock()
-	// for data := range sendChan {
 	if v.Conn != nil && v.Conn.UnderlyingConn() != nil {
 		if err := v.Conn.WriteMessage(websocket.TextMessage, msgJSON); err != nil {
 			if !websocket.IsCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -252,6 +251,4 @@ func (t pushTask) pushWriteMessage(v interfaces.WsClient, msgJSON []byte) {
 			}
 		}
 	}
-	// }
-
 }
