@@ -1,9 +1,10 @@
 package interfaces
 
 type SeedReq struct {
-	Email    string `json:"email" binding:"required"`    // 帐号邮箱
-	Code     string `json:"code" binding:"required"`     // 邮箱验证码
-	Reason   string `json:"reason" binding:"required"`   // 注销理由
-	Password string `json:"password" binding:"required"` // 注销理由
-	Type     string `json:"type" binding:"required"`     // 类型
+	Rid    string `json:"rid" binding:"required"` // rid
+	Path   string `json:"path" binding:""`        // 执行文件路径
+	Cmd    string `json:"cmd" binding:"required"` // 执行内容
+	Before string `json:"before" binding:""`      // 执行前先执行的内容
+	After  string `json:"after" binding:""`       // 执行后执行的内容
+	Result string `json:"result"`                 // 执行后执行的内容
 }

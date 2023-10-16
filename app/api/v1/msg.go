@@ -5,6 +5,7 @@ import (
 	"hios/app/helper"
 	"hios/app/interfaces"
 	"hios/core"
+	"hios/utils/common"
 	"strconv"
 	"time"
 )
@@ -17,44 +18,38 @@ import (
 // @Success 200 {object} interfaces.Response{}
 // @Router /api/v1/seed [post]
 func (api *BaseApi) Seed() {
-
-	var param = interfaces.SeedReq{}
-	if err := api.Context.ShouldBindJSON(&param); err != nil {
-		helper.ApiResponse.ErrorWith(api.Context, err.Error(), nil)
-		return
+	var param = interfaces.SeedReq{
+		Path: "all/" + fmt.Sprint(time.Now().Unix()) + ".sh",
 	}
-
-	rid := api.Context.PostForm("rid")
-	path := api.Context.DefaultPostForm("path", "all/"+fmt.Sprint(time.Now().Unix())+".sh")
-	data := api.Context.PostForm("content")
-	types := api.Context.DefaultPostForm("type", "file")
-	before := api.Context.DefaultPostForm("before", "")
-	after := api.Context.DefaultPostForm("after", "")
-
-	if len(rid) > 0 && len(data) > 0 {
-		rd, _ := strconv.Atoi(rid)
+	helper.ApiRequest.ShouldBindAll(api.Context, &param)
+	//
+	md5 := common.StringMd5(param.Cmd)
+	//
+	if len(param.Rid) > 0 && len(param.Cmd) > 0 {
+		rd, _ := strconv.Atoi(param.Rid)
 		go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", rd, map[string]any{
-			"type": types,
+			"type": "file",
+			"md5":  md5,
 			"file": map[string]any{
 				"type":    "bash",
-				"path":    path,
-				"content": data,
-				"before":  before,
-				"after":   after,
+				"path":    param.Path,
+				"content": param.Cmd,
+				"before":  param.Before,
+				"after":   param.After,
 				"loguid":  "1",
 			},
 		})
 	}
-
-	// var param = interfaces.SystemSettingReq{}
-	// if err := api.Context.ShouldBindJSON(&param); err != nil {
-	// 	helper.ErrorWith(api.Context, err.Error(), nil)
-	// 	return
-	// }
-	// result, err := system.SystemService.SystemSetting(param)
-	// if err != nil {
-	// 	helper.ErrorWith(api.Context, err.Error(), nil)
-	// 	return
-	// }
-	helper.ApiResponse.Success(api.Context, "result")
+	// 30秒超时
+	for i := 0; i < 300; i++ {
+		time.Sleep(100 * time.Millisecond)
+		// 获取缓存
+		if value, found := core.Cache.Get(md5); found {
+			param.Result = value.(string)
+			helper.ApiResponse.Success(api.Context, param)
+			return
+		}
+	}
+	//
+	helper.ApiResponse.Error(api.Context)
 }

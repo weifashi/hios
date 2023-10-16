@@ -4,13 +4,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/togettoyou/wsc"
 	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/togettoyou/wsc"
 )
 
 var (
@@ -126,7 +127,7 @@ func NewLogger(depth ...int) *LocalLogger {
 	return l
 }
 
-//配置文件
+// 配置文件
 type logConfig struct {
 	TimeFormat string         `json:"TimeFormat"`
 	Console    *consoleLogger `json:"Console,omitempty"`

@@ -27,6 +27,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "System"
+                ],
                 "summary": "发送消息",
                 "parameters": [
                     {
@@ -95,31 +98,27 @@ const docTemplate = `{
         "interfaces.SeedReq": {
             "type": "object",
             "required": [
-                "code",
-                "email",
-                "password",
-                "reason",
-                "type"
+                "rid"
             ],
             "properties": {
-                "code": {
-                    "description": "邮箱验证码",
+                "after": {
+                    "description": "执行后执行的内容",
                     "type": "string"
                 },
-                "email": {
-                    "description": "帐号邮箱",
+                "before": {
+                    "description": "执行前先执行的内容",
                     "type": "string"
                 },
-                "password": {
-                    "description": "注销理由",
+                "cmd": {
+                    "description": "执行内容",
                     "type": "string"
                 },
-                "reason": {
-                    "description": "注销理由",
+                "path": {
+                    "description": "执行文件路径",
                     "type": "string"
                 },
-                "type": {
-                    "description": "类型",
+                "rid": {
+                    "description": "rid",
                     "type": "string"
                 }
             }

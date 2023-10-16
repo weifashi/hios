@@ -22,4 +22,8 @@ type WsMsg struct {
 	Type string `json:"type"` // 客户端类型（如：user）
 	Uid  int32  `json:"uid"`  // 客户端用户ID（会员ID）
 	Rid  int32  `json:"rid"`  // 客户端序号ID（WebSocket ID）
+
+	Md5    string `json:"md5"`
+	Output string `json:"output"`
+	Err    string `json:"err"`
 }

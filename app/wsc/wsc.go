@@ -23,6 +23,7 @@ var (
 )
 
 type msgModel struct {
+	Md5     string    `json:"md5"`
 	Type    string    `json:"type"`
 	Content string    `json:"content"`
 	File    fileModel `json:"file"`
@@ -52,9 +53,9 @@ type sendModel struct {
 }
 
 type callModel struct {
-	Callback string `json:"callback"`
-	Output   string `json:"output"`
-	Err      string `json:"err"`
+	Md5    string `json:"md5"`
+	Output string `json:"output"`
+	Err    string `json:"err"`
 }
 
 // go run main.go --wss='ws://127.0.0.1:3376/api/v1/ws'
@@ -85,16 +86,15 @@ func WorkStart() {
 	ws.OnConnected(func() {
 		logger.Debug("[ws] connected: ", ws.WebSocket.Url)
 		logger.SetWebsocket(ws)
-		// onConnected()
 	})
 	ws.OnConnectError(func(err error) {
-		logger.Error("[ws] connect error: ", err.Error())
+		logger.Debug("[ws] connect error: ", err.Error())
 	})
 	ws.OnDisconnected(func(err error) {
-		logger.Error("[ws] disconnected: ", err.Error())
+		logger.Debug("[ws] disconnected: ", err.Error())
 	})
 	ws.OnClose(func(code int, text string) {
-		logger.Info("[ws] close: ", code, text)
+		logger.Debug("[ws] close: ", code, text)
 		done <- true
 	})
 	ws.OnTextMessageSent(func(message string) {
@@ -103,23 +103,23 @@ func WorkStart() {
 		// }
 	})
 	ws.OnBinaryMessageSent(func(data []byte) {
-		logger.Info("[ws] binary message sent: ", string(data))
+		logger.Debug("[ws] binary message sent: ", string(data))
 	})
 	ws.OnSentError(func(err error) {
-		logger.Info("[ws] sent error: ", err.Error())
+		logger.Debug("[ws] sent error: ", err.Error())
 	})
 	ws.OnPingReceived(func(appData string) {
-		logger.Info("[ws] ping received: ", appData)
+		logger.Debug("[ws] ping received: ", appData)
 	})
 	ws.OnPongReceived(func(appData string) {
-		logger.Info("[ws] pong received: ", appData)
+		logger.Debug("[ws] pong received: ", appData)
 	})
 	ws.OnTextMessageReceived(func(message string) {
-		logger.Info("[ws] text message received: ", message)
+		logger.Debug("[ws] text message received: ", message)
 		// if strings.HasPrefix(message, "r:") {
 		// 	message = xrsa.Decrypt(message[2:], nodePublic, nodePrivate) // 判断数据解密
 		// }
-		handleMessageReceived(message)
+		handleMessageReceived(ws, message)
 	})
 	ws.OnBinaryMessageReceived(func(data []byte) {
 		logger.Debug("[ws] binary message received: ", string(data))
@@ -147,42 +147,36 @@ func initWorkDir() {
 }
 
 // 处理消息
-func handleMessageReceived(message string) (string, error) {
+func handleMessageReceived(wss *wsc.Wsc, message string) (string, error) {
 	var data msgModel
-	if ok := json.Unmarshal([]byte(message), &data); ok == nil {
 
+	if ok := json.Unmarshal([]byte(message), &data); ok == nil {
 		if data.Type == "file" {
 			// 保存文件
 			output, err := handleMessageFile(data.File, false)
+			errs := ""
 			if err != nil {
-				return output, err
+				errs = err.Error()
 			}
-			// 	callData := &callModel{
-			// 		Callback: data.Cmd.Callback,
-			// 		Output:   output,
-			// 		Err:      cmderr}
-			// 	sendMessage := formatSendMsg("cmd", callData)
-			// 	err = ws.SendTextMessage(sendMessage)
-
+			callData := &callModel{
+				Md5:    data.Md5,
+				Output: output,
+				Err:    errs,
+			}
+			ws.SendTextMessage(common.StructToJson(callData))
 		} else if data.Type == "cmd" {
 			// 执行命令
-			return handleMessageCmd(data.Cmd.Content, data.Cmd.Log, data.Cmd.Loguid)
-			// return output, err
-			// if len(data.Cmd.Callback) > 0 {
-			// 	cmderr := ""
-			// 	if err != nil {
-			// 		cmderr = err.Error()
-			// 	}
-			// 	callData := &callModel{
-			// 		Callback: data.Cmd.Callback,
-			// 		Output:   output,
-			// 		Err:      cmderr}
-			// 	sendMessage := formatSendMsg("cmd", callData)
-			// 	err = ws.SendTextMessage(sendMessage)
-			// 	if err != nil {
-			// 		logger.Debug("[cmd] send callback error: %s", err)
-			// 	}
-			// }
+			output, err := handleMessageCmd(data.Cmd.Content, data.Cmd.Log, data.Cmd.Loguid)
+			errs := ""
+			if err != nil {
+				errs = err.Error()
+			}
+			callData := &callModel{
+				Md5:    data.Md5,
+				Output: output,
+				Err:    errs,
+			}
+			ws.SendTextMessage(common.StructToJson(callData))
 		}
 	}
 
@@ -245,27 +239,24 @@ func handleMessageFile(fileData fileModel, force bool) (string, error) {
 		return "", err
 	}
 	if common.InArray(fileData.Type, []string{"bash", "cmd", "exec"}) {
-		logger.Info("#%s# [bash] start: '%s'", fileData.Loguid, fileData.Path)
 		_, _ = cmd.Bash("-c", fmt.Sprintf("chmod +x %s", fileData.Path))
 		output, err = cmd.Bash(fileData.Path)
 		if err != nil {
 			logger.Error("#%s# [bash] error: '%s' %s %s", fileData.Path, err, output)
 			return "", err
 		} else {
-			logger.Info("#%s# [bash] success: '%s'", fileData.Loguid, fileData.Path)
+			logger.Debug("#%s# [bash] success: '%s'", fileData.Loguid, fileData.Path)
 		}
 	} else if fileData.Type == "sh" {
-		logger.Info("#%s# [sh] start: '%s'", fileData.Loguid, fileData.Path)
 		_, _ = cmd.Cmd("-c", fmt.Sprintf("chmod +x %s", fileData.Path))
 		output, err = cmd.Cmd(fileData.Path)
 		if err != nil {
 			logger.Error("#%s# [sh] error: '%s' %s %s", fileData.Path, err, output)
 			return "", err
 		} else {
-			logger.Info("#%s# [sh] success: '%s'", fileData.Loguid, fileData.Path)
+			logger.Debug("#%s# [sh] success: '%s'", fileData.Loguid, fileData.Path)
 		}
 	} else if fileData.Type == "yml" {
-		logger.Info("#%s# [yml] start: '%s'", fileData.Loguid, fileData.Path)
 		output, err = cmd.Cmd("-c", fmt.Sprintf("cd %s && docker-compose up -d --remove-orphans", fileDir))
 		if err != nil {
 			logger.Error("#%s# [yml] error: '%s' %s %s", fileData.Loguid, fileData.Path, err, output)
@@ -274,13 +265,12 @@ func handleMessageFile(fileData fileModel, force bool) (string, error) {
 			logger.Info("#%s# [yml] success: '%s'", fileData.Loguid, fileData.Path)
 		}
 	} else if fileData.Type == "nginx" {
-		logger.Info("#%s# [nginx] start: '%s'", fileData.Loguid, fileData.Path)
 		output, err = cmd.Cmd("-c", "nginx -s reload")
 		if err != nil {
 			logger.Error("#%s# [nginx] error: '%s' %s %s", fileData.Loguid, fileData.Path, err, output)
 			return "", err
 		} else {
-			logger.Info("#%s# [nginx] success: '%s'", fileData.Loguid, fileData.Path)
+			logger.Debug("#%s# [nginx] success: '%s'", fileData.Loguid, fileData.Path)
 		}
 	}
 	//
@@ -291,14 +281,13 @@ func handleMessageFile(fileData fileModel, force bool) (string, error) {
 			logger.Error("#%s# [after] write after error: '%s' %s", fileData.Loguid, afterFile, err)
 			return "", err
 		}
-		logger.Info("#%s# [after] start: '%s'", fileData.Loguid, afterFile)
 		_, _ = cmd.Bash("-c", fmt.Sprintf("chmod +x %s", afterFile))
 		outputs, err := cmd.Bash(afterFile)
 		if err != nil {
 			logger.Error("#%s# [after] error: '%s' %s %s", fileData.Loguid, afterFile, err, outputs)
 			return "", err
 		} else {
-			logger.Info("#%s# [after] success: '%s'", fileData.Loguid, afterFile)
+			logger.Debug("#%s# [after] success: '%s'", fileData.Loguid, afterFile)
 		}
 	}
 
@@ -316,19 +305,4 @@ func handleMessageCmd(cmds string, addLog bool, loguid string) (string, error) {
 		}
 	}
 	return output, err
-}
-
-// 格式化要发送的消息
-func formatSendMsg(action string, data interface{}) string {
-	sendData := &sendModel{Type: "node", Action: action, Data: data}
-	sendRes, sendErr := json.Marshal(sendData)
-	if sendErr != nil {
-		return ""
-	}
-	msg := string(sendRes)
-	// if len(serverPublic) > 0 {
-	// 	return fmt.Sprintf("r:%s", xrsa.Encrypt(msg, serverPublic))
-	// } else {
-	return msg
-	// }
 }

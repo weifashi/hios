@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -76,6 +77,7 @@ func (api *BaseApi) Ws() {
 	for {
 		// 读取客户端发送过来的消息，如果没发就会一直阻塞住
 		_, message, err := conn.ReadMessage()
+
 		if err != nil {
 			api.wsOfflineClients(client.Rid)
 			break
@@ -86,6 +88,13 @@ func (api *BaseApi) Ws() {
 		if err != nil {
 			continue
 		}
+
+		// 缓存执行回调
+		if msg.Md5 != "" {
+			core.Cache.Set(msg.Md5, msg.Output, 3*time.Second)
+		}
+
+		//
 		if msg.Data == nil {
 			msg.Data = make(map[string]any)
 		}

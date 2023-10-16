@@ -73,15 +73,15 @@ func (r request) SetCookie(c *gin.Context, name, value string, maxAge int) {
 }
 
 // RemoveCookie 删除Cookie
-func RemoveCookie(c *gin.Context, name string) {
+func (r request) RemoveCookie(c *gin.Context, name string) {
 	c.SetCookie(name, "", -1, "/", "", false, false)
 }
 
 // 绑定参数
-func ShouldBindAll(c *gin.Context, obj any) any {
+func (r request) ShouldBindAll(c *gin.Context, obj any) {
 	if err := c.ShouldBind(obj); err != nil {
 		logger.Error(err.Error())
-		ApiResponse.ErrorWith(c, constant.ErrInvalidParameter, nil)
+		ApiResponse.ErrorWith(c, constant.ErrInvalidParameter, err)
 		panic(nil)
 	}
 	if err := c.ShouldBindJSON(obj); err != nil && err.Error() != "EOF" {
@@ -89,5 +89,4 @@ func ShouldBindAll(c *gin.Context, obj any) any {
 		ApiResponse.ErrorWith(c, constant.ErrInvalidParameter, err)
 		panic(nil)
 	}
-	return obj
 }

@@ -11,6 +11,16 @@ import (
 
 var Cache = cache.New(5*time.Hour, 10*time.Hour)
 
+// // 设置缓存
+// core.Cache.Set("key", "value", 3*time.Second)
+
+// // 获取缓存
+// if value, found := core.Cache.Get("key"); found {
+//     // 缓存命中，使用 value
+// } else {
+//     // 缓存未命中，进行其他逻辑处理
+// }
+
 var Redis *redis.Client
 
 // InitRedis 初始化redis客户端
