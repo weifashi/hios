@@ -45,8 +45,11 @@ func (api *BaseApi) Seed() {
 		time.Sleep(100 * time.Millisecond)
 		// 获取缓存
 		if value, found := core.Cache.Get(md5); found {
-			param.Result = value.(string)
-			helper.ApiResponse.Success(api.Context, param)
+			helper.ApiResponse.Success(api.Context, map[string]any{
+				"rid":    param.Rid,
+				"path":   param.Path,
+				"result": value.(string),
+			})
 			return
 		}
 	}
