@@ -46,10 +46,13 @@ func (api *BaseApi) Ws() {
 	wsRid++
 	client := interfaces.WsClient{
 		Conn: conn,
-		Type: constant.WsIsUnknown,
+		Type: api.Context.DefaultQuery("type", constant.WsIsUnknown),
 		Uid:  0,
 		Rid:  wsRid,
+		Ip:   api.Context.ClientIP(),
 	}
+
+	//
 	if api.Token != "" {
 		client.Type = constant.WsIsUser
 		if api.Userinfo != nil {
@@ -92,8 +95,8 @@ func (api *BaseApi) Ws() {
 		// 缓存执行回调
 		if msg.Md5 != "" {
 			core.Cache.Set(msg.Md5, msg.Output, 3*time.Second)
+			continue
 		}
-
 		//
 		if msg.Data == nil {
 			msg.Data = make(map[string]any)
@@ -164,6 +167,9 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	// 保存用户
 	service.WebSocketService.SaveUser(int(client.Rid), int(client.Uid))
 
+	// 客户端上线
+	service.ClientService.GoLive(client.Ip, client.Type)
+
 	// 发送open事件
 	go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", int(client.Rid), map[string]interface{}{
 		"type": "open",
@@ -191,6 +197,8 @@ func (api *BaseApi) wsOfflineClients(rid int32) {
 			go core.GlobalEventBus.Publish("Task.LineTask.Start", int(client.Uid), false)
 			// 清除用户
 			service.WebSocketService.DeleteUser(int(client.Rid))
+			// 客户端离线
+			service.ClientService.Offline(client.Ip)
 			break
 		}
 	}

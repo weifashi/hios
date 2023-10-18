@@ -5,11 +5,13 @@ import "github.com/gorilla/websocket"
 type WebsocketReq struct {
 	Token    string `json:"token"`
 	Language string `json:"language"`
+	Type     string `json:"type"`
 }
 
 type WsClient struct {
 	Conn *websocket.Conn `json:"conn"`
 
+	Ip   string `json:"ip"`   // 客户端IP
 	Type string `json:"type"` // 客户端类型（如：user）
 	Uid  int32  `json:"uid"`  // 客户端用户ID（会员ID）
 	Rid  int32  `json:"rid"`  // 客户端序号ID（WebSocket ID）

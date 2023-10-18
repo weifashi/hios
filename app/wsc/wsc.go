@@ -71,7 +71,6 @@ func WorkStart() {
 	origin = strings.Replace(origin, "http://", "ws://", 1)
 	//
 	done := make(chan bool)
-	//
 	ws = wsc.New(origin)
 	// 自定义配置
 	ws.SetConfig(&wsc.Config{

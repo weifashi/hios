@@ -32,30 +32,25 @@ func init() {
 }
 
 // 开始
-func (t pushTask) Start(param interface{}, retryOffline ...bool) {
-	//
-	retryOfflines := true
-	if len(retryOffline) > 0 {
-		retryOfflines = retryOffline[0]
-	}
+func (t pushTask) Start(param interface{}) {
 	if p, ok := param.(string); ok {
 		if strings.HasPrefix(p, "PUSH::") {
 			// 推送缓存
 			if v, _ := core.Cache.Get(p); v != nil {
 				if m, ok := v.(map[string]interface{}); ok && m["fd"] != nil {
-					t.push([]map[string]interface{}{m}, retryOfflines, "", 0)
+					t.push([]map[string]interface{}{m}, true, "", 0)
 				}
 			}
 		} else if strings.HasPrefix(p, "RETRY::") {
 			// 根据会员ID推送离线时收到的消息
 			userid := strings.TrimPrefix(p, "RETRY::")
 			p := t.sendTmpMsgForUserid(common.StringToInt(userid))
-			t.push(p, retryOfflines, "", 0)
+			t.push(p, true, "", 0)
 		}
 	} else if p, ok := param.(map[string]interface{}); ok {
-		t.push([]map[string]interface{}{p}, retryOfflines, "", 0)
+		t.push([]map[string]interface{}{p}, true, "", 0)
 	} else if p, ok := param.([]map[string]interface{}); ok {
-		t.push(p, retryOfflines, "", 0)
+		t.push(p, true, "", 0)
 	}
 }
 

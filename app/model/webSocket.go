@@ -16,6 +16,5 @@ var WebSocketModel = WebSocket{}
 
 // UpdateInsert 更新或插入
 func (m WebSocket) UpdateInsert(where, data map[string]interface{}) error {
-	WebSocketUserTable := core.DBTableName(&WebSocket{})
-	return core.DB.Table(WebSocketUserTable).Where(where).Assign(data).FirstOrCreate(&WebSocket{}).Error
+	return core.DB.Table(core.DBTableName(&WebSocket{})).Where(where).Assign(data).FirstOrCreate(&WebSocket{}).Error
 }

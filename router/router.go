@@ -35,7 +35,7 @@ func Init(c *gin.Context) {
 		// 如果不是本地请求，则返回 403 Forbidden
 		clientIP := c.ClientIP()
 		isLocal := strings.HasPrefix(clientIP, "127.0.0.1") || strings.HasPrefix(clientIP, "::1")
-		if !isLocal {
+		if !isLocal && c.Request.Header.Get("Upgrade") != "websocket" {
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}

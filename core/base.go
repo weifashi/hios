@@ -13,8 +13,8 @@ type BaseIdModels struct {
 }
 
 type BaseAtModels struct {
-	CreatedAt TsTime `gorm:"autoCreateTime;comment:创建时间" json:"created_at"`
-	UpdatedAt TsTime `gorm:"autoUpdateTime;comment:更新时间" json:"updated_at"`
+	CreatedAt *time.Time `gorm:"autoCreateTime;comment:创建时间" json:"created_at"`
+	UpdatedAt *time.Time `gorm:"autoUpdateTime;comment:更新时间" json:"updated_at"`
 }
 
 // TsTime 自定义时间格式
