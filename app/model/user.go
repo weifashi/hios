@@ -9,7 +9,7 @@ import (
 
 // User 用户实例
 type User struct {
-	Userid       int         `gorm:"primary_key" json:"userid"`
+	Id           int         `gorm:"primary_key" json:"id"`
 	Identity     string      `gorm:"type:varchar(255);comment:身份" json:"identity"`
 	Department   string      `gorm:"type:varchar(255);comment:所属部门" json:"department"`
 	Az           string      `gorm:"type:varchar(10);comment:A-Z" json:"az"`
@@ -129,11 +129,11 @@ func (m User) IsDisable() bool {
 // CheckSystem 检查环境是否允许
 // onlyUserid 仅指定会员
 func (m User) CheckSystem(onlyUserid ...int) bool {
-	if len(onlyUserid) > 0 && onlyUserid[0] != m.Userid {
+	if len(onlyUserid) > 0 && onlyUserid[0] != m.Id {
 		return true
 	}
 	if os.Getenv("PASSWORD_ADMIN") == "disabled" {
-		if m.Userid == 1 {
+		if m.Id == 1 {
 			return false
 		}
 	}
@@ -148,10 +148,10 @@ func (m User) GetOnlineStatus() bool {
 	if m.Bot == 1 {
 		return true
 	}
-	_, found := core.Cache.Get("User::online:" + fmt.Sprint(m.Userid))
+	_, found := core.Cache.Get("User::online:" + fmt.Sprint(m.Id))
 	if found {
 		return true
 	}
-	err := core.DB.Where("userid = ?", m.Userid).First(&WebSocket{}).Error
+	err := core.DB.Where("userid = ?", m.Id).First(&WebSocket{}).Error
 	return err == nil
 }

@@ -47,7 +47,7 @@ func (api *BaseApi) Ws() {
 	client := interfaces.WsClient{
 		Conn: conn,
 		Type: api.Context.DefaultQuery("type", constant.WsIsUnknown),
-		Uid:  0,
+		Uid:  api.Context.ClientIP(),
 		Rid:  wsRid,
 		Ip:   api.Context.ClientIP(),
 	}
@@ -56,7 +56,7 @@ func (api *BaseApi) Ws() {
 	if api.Token != "" {
 		client.Type = constant.WsIsUser
 		if api.Userinfo != nil {
-			client.Uid = int32(api.Userinfo.Userid)
+			client.Uid = strconv.Itoa(api.Userinfo.Id)
 		}
 	}
 
@@ -122,10 +122,10 @@ func (api *BaseApi) wsHandleUserMsg(client interfaces.WsClient, msg interfaces.W
 	if msg.Action == constant.WsSendMsg {
 		// 消息发送
 		toType, _ := msg.Data.(map[string]interface{})["type"].(string) // 客户端类型
-		toUid, _ := msg.Data.(map[string]interface{})["uid"].(float64)  // 发送给谁
+		toUid, _ := msg.Data.(map[string]interface{})["uid"].(string)   // 发送给谁
 		msgData := msg.Data.(map[string]interface{})["data"]            // 消息内容
 		msgId := msg.Data.(map[string]interface{})["msgId"]             // 消息ID（用于回调）
-		if toUid == 0 || msgData == nil {
+		if toUid == "" || msgData == nil {
 			return
 		}
 		// 回调消息
@@ -144,7 +144,7 @@ func (api *BaseApi) wsHandleUserMsg(client interfaces.WsClient, msg interfaces.W
 			Rid:    client.Rid,
 		}
 		for _, v := range core.WsClients {
-			if v.Type == toType && v.Uid == int32(toUid) {
+			if v.Type == toType && v.Uid == toUid {
 				go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", toUid, sendMsg)
 			}
 		}
@@ -165,7 +165,7 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	core.WsClients = append(core.WsClients, client)
 
 	// 保存用户
-	service.WebSocketService.SaveUser(int(client.Rid), int(client.Uid))
+	service.WebSocketService.SaveUser(int(client.Rid), client.Uid)
 
 	// 客户端上线
 	service.ClientService.GoLive(client.Ip, client.Type)
@@ -179,10 +179,10 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	})
 
 	// 通知上线
-	go core.GlobalEventBus.Publish("Task.LineTask.Start", int(client.Uid), true)
+	go core.GlobalEventBus.Publish("Task.LineTask.Start", client.Uid, true)
 
 	// 推送离线时收到的消息
-	go core.GlobalEventBus.Publish("Task.PushTask.Start", "RETRY::"+strconv.Itoa(int(client.Uid)))
+	go core.GlobalEventBus.Publish("Task.PushTask.Start", "RETRY::"+client.Uid)
 }
 
 // 客户端离线
@@ -194,7 +194,7 @@ func (api *BaseApi) wsOfflineClients(rid int32) {
 			core.WsClients = append(core.WsClients[:k], core.WsClients[k+1:]...)
 			_ = client.Conn.Close()
 			// 通知离线
-			go core.GlobalEventBus.Publish("Task.LineTask.Start", int(client.Uid), false)
+			go core.GlobalEventBus.Publish("Task.LineTask.Start", client.Uid, false)
 			// 清除用户
 			service.WebSocketService.DeleteUser(int(client.Rid))
 			// 客户端离线

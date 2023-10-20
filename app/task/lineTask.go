@@ -19,15 +19,15 @@ func init() {
 	core.GlobalEventBus.SubscribeAsync("Task.LineTask.Start", new(lineTask).Start, true)
 }
 
-// userid: 用户的 ID。
+// uid: 用户的 ID。
 // online: 用户的上线/离线状态 true: 上线，false: 离线。
-func (t lineTask) Start(userid int, online bool) {
+func (t lineTask) Start(uid string, online bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var endPush []map[string]interface{}
 	var websockets []model.WebSocket
-	if err := core.DB.WithContext(ctx).Where("userid != ?", userid).Find(&websockets).Error; err != nil {
+	if err := core.DB.WithContext(ctx).Where("uid != ?", uid).Find(&websockets).Error; err != nil {
 		log.Printf("查询 WebSocket 失败: %v", err)
 		return
 	}
@@ -42,7 +42,7 @@ func (t lineTask) Start(userid int, online bool) {
 			"msg": map[string]interface{}{
 				"type": "line",
 				"data": map[string]interface{}{
-					"userid": userid,
+					"uid":    uid,
 					"online": online,
 				},
 			},

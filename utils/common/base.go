@@ -115,6 +115,19 @@ func UniqueInt(ints []int) []int {
 	return uniqueInts
 }
 
+// UniqueInt int去重
+func UniqueStr(ints []string) []string {
+	uniqueMap := make(map[string]bool)
+	uniqueInts := []string{}
+	for _, i := range ints {
+		if _, ok := uniqueMap[i]; !ok {
+			uniqueMap[i] = true
+			uniqueInts = append(uniqueInts, i)
+		}
+	}
+	return uniqueInts
+}
+
 // 获取后缀名图标相对地址
 func ExtIcon(ext string) string {
 	switch ext {

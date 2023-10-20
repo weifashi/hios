@@ -13,7 +13,7 @@ type WsClient struct {
 
 	Ip   string `json:"ip"`   // 客户端IP
 	Type string `json:"type"` // 客户端类型（如：user）
-	Uid  int32  `json:"uid"`  // 客户端用户ID（会员ID）
+	Uid  string `json:"uid"`  // 客户端用户ID（会员ID）
 	Rid  int32  `json:"rid"`  // 客户端序号ID（WebSocket ID）
 }
 
@@ -22,7 +22,7 @@ type WsMsg struct {
 	Data   any `json:"data"`   // 消息内容
 
 	Type string `json:"type"` // 客户端类型（如：user）
-	Uid  int32  `json:"uid"`  // 客户端用户ID（会员ID）
+	Uid  string `json:"uid"`  // 客户端用户ID（会员ID）
 	Rid  int32  `json:"rid"`  // 客户端序号ID（WebSocket ID）
 
 	Md5    string `json:"md5"`

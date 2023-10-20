@@ -6,7 +6,6 @@ import (
 	"hios/app/interfaces"
 	"hios/core"
 	"hios/utils/common"
-	"strconv"
 	"time"
 )
 
@@ -25,22 +24,6 @@ func (api *BaseApi) Client() {
 	//
 	md5 := common.StringMd5(param.Cmd)
 	//
-	if len(param.Rid) > 0 && len(param.Cmd) > 0 {
-		rd, _ := strconv.Atoi(param.Rid)
-		go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", rd, map[string]any{
-			"type": "file",
-			"md5":  md5,
-			"file": map[string]any{
-				"type":    "bash",
-				"path":    param.Path,
-				"content": param.Cmd,
-				"before":  param.Before,
-				"after":   param.After,
-				"loguid":  "1",
-			},
-		})
-	}
-	// 30秒超时
 	for i := 0; i < 300; i++ {
 		time.Sleep(100 * time.Millisecond)
 		// 获取缓存
@@ -73,19 +56,36 @@ func (api *BaseApi) Seed() {
 	md5 := common.StringMd5(param.Cmd)
 	//
 	if len(param.Rid) > 0 && len(param.Cmd) > 0 {
-		rd, _ := strconv.Atoi(param.Rid)
-		go core.GlobalEventBus.Publish("Task.PushTask.Start", rd, map[string]any{
-			"type": "file",
-			"md5":  md5,
-			"file": map[string]any{
-				"type":    "bash",
-				"path":    param.Path,
-				"content": param.Cmd,
-				"before":  param.Before,
-				"after":   param.After,
-				"loguid":  "1",
+
+		go core.GlobalEventBus.Publish("Task.PushTask.Start", map[string]any{
+			"uid": "127.0.0.1",
+			"msg": map[string]any{
+				"type": "file",
+				"md5":  md5,
+				"file": map[string]any{
+					"type":    "bash",
+					"path":    param.Path,
+					"content": param.Cmd,
+					"before":  param.Before,
+					"after":   param.After,
+					"loguid":  "1",
+				},
 			},
 		})
+
+		// rd, _ := strconv.Atoi(param.Rid)
+		// go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", rd, map[string]any{
+		// 	"type": "file",
+		// 	"md5":  md5,
+		// 	"file": map[string]any{
+		// 		"type":    "bash",
+		// 		"path":    param.Path,
+		// 		"content": param.Cmd,
+		// 		"before":  param.Before,
+		// 		"after":   param.After,
+		// 		"loguid":  "1",
+		// 	},
+		// })
 	}
 	// 30秒超时
 	for i := 0; i < 300; i++ {
