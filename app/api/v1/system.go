@@ -72,20 +72,6 @@ func (api *BaseApi) Seed() {
 				},
 			},
 		})
-
-		// rd, _ := strconv.Atoi(param.Rid)
-		// go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", rd, map[string]any{
-		// 	"type": "file",
-		// 	"md5":  md5,
-		// 	"file": map[string]any{
-		// 		"type":    "bash",
-		// 		"path":    param.Path,
-		// 		"content": param.Cmd,
-		// 		"before":  param.Before,
-		// 		"after":   param.After,
-		// 		"loguid":  "1",
-		// 	},
-		// })
 	}
 	// 30秒超时
 	for i := 0; i < 300; i++ {
