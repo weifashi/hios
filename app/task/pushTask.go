@@ -165,7 +165,7 @@ func (t pushTask) push(lists []map[string]interface{}, delay ...int64) {
 			}
 			for _, uid := range uid.([]string) {
 				var row []int
-				core.DB.Model(&model.WebSocket{}).Where("uid = ?", uid).Pluck("fd", &row)
+				core.DB.Model(&model.WebSocket{}).Order("id DESC").Where("uid = ?", uid).Pluck("fd", &row)
 				if len(row) > 0 {
 					array = append(array, row...)
 				} else {
@@ -195,7 +195,7 @@ func (t pushTask) push(lists []map[string]interface{}, delay ...int64) {
 				// 发送消息
 				t.PushMsg(fid, msg)
 				if tmpMsgId > 0 {
-					core.DB.Model(&model.WebSocketTmpMsg{}).Delete(tmpMsgId)
+					core.DB.Where("id = ?", tmpMsgId).Delete(&model.WebSocketTmpMsg{})
 				}
 			}
 		}
