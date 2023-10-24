@@ -5,7 +5,7 @@ import "hios/core"
 // WebSocket WebSocket连接
 type Client struct {
 	Id     int    `gorm:"primary_key;auto_increment" json:"id"`
-	Remark string `gorm:"default:'';comment:备注" json:"remark"`
+	Uid    string `gorm:"type:varchar(36);default:'';comment:客户端标识" json:"uid"`
 	Source string `gorm:"type:varchar(50);default:'';comment:来源" json:"source"`
 	IP     string `gorm:"type:varchar(50);default:'';comment:客户端ip" json:"ip"`
 	Online bool   `gorm:"type:tinyint(1);default:0;comment:是否在线" json:"online"`

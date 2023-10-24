@@ -11,12 +11,13 @@ var ClientService = clientService{}
 type clientService struct{}
 
 // 客户端上线
-func (ws clientService) GoLive(clientIp string, source string) {
+func (ws clientService) GoLive(uid string, clientIp string, source string) {
 	model.ClientModel.UpdateInsert(
-		map[string]interface{}{"ip": clientIp},
+		map[string]interface{}{"uid": uid},
 		map[string]interface{}{
 			"online": 1,
 			"source": source,
+			"ip":     clientIp,
 		},
 	)
 	//
@@ -25,9 +26,9 @@ func (ws clientService) GoLive(clientIp string, source string) {
 }
 
 // 客户端离线
-func (ws clientService) Offline(clientIp string) {
+func (ws clientService) Offline(uid string) {
 	model.ClientModel.UpdateInsert(
-		map[string]interface{}{"ip": clientIp},
+		map[string]interface{}{"uid": uid},
 		map[string]interface{}{
 			"online": 0,
 		},

@@ -26,11 +26,12 @@ definitions:
       path:
         description: 执行文件路径
         type: string
-      rid:
+      uid:
         description: rid
         type: string
     required:
-    - rid
+    - cmd
+    - uid
     type: object
 host: http://localhost
 info:
@@ -43,6 +44,26 @@ info:
   title: hios
   version: "1.0"
 paths:
+  /api/v1/client:
+    get:
+      consumes:
+      - application/json
+      description: 获取客户端列表
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/interfaces.SeedReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/interfaces.Response'
+      summary: 获取客户端列表
+      tags:
+      - System
   /api/v1/seed:
     post:
       consumes:
@@ -74,6 +95,9 @@ paths:
         type: string
       - in: query
         name: token
+        type: string
+      - in: query
+        name: type
         type: string
       responses: {}
       summary: Websocket ws

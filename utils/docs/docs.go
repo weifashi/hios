@@ -21,6 +21,37 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/client": {
+            "get": {
+                "description": "获取客户端列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "获取客户端列表",
+                "parameters": [
+                    {
+                        "description": "request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/interfaces.SeedReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/interfaces.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/seed": {
             "post": {
                 "description": "发送消息",
@@ -72,6 +103,11 @@ const docTemplate = `{
                         "type": "string",
                         "name": "token",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "type",
+                        "in": "query"
                     }
                 ],
                 "responses": {}
@@ -98,7 +134,8 @@ const docTemplate = `{
         "interfaces.SeedReq": {
             "type": "object",
             "required": [
-                "rid"
+                "cmd",
+                "uid"
             ],
             "properties": {
                 "after": {
@@ -117,7 +154,7 @@ const docTemplate = `{
                     "description": "执行文件路径",
                     "type": "string"
                 },
-                "rid": {
+                "uid": {
                     "description": "rid",
                     "type": "string"
                 }

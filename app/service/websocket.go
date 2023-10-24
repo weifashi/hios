@@ -44,7 +44,6 @@ func (ws webSocketService) DeleteUser(fd int) {
 	for _, webSocket := range webSockets {
 		if webSocket.Uid != "" {
 			// 离线时更新会员最后在线时间
-			core.DB.Model(&model.User{}).Where("id = ?", webSocket.Uid).Update("last_at", time.Now().Unix())
 			cacheKey := fmt.Sprintf("User::online:%s", webSocket.Uid)
 			core.Cache.Delete(cacheKey)
 		}

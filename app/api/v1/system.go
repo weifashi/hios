@@ -29,7 +29,7 @@ func (api *BaseApi) Client() {
 		// 获取缓存
 		if value, found := core.Cache.Get(md5); found {
 			helper.ApiResponse.Success(api.Context, map[string]any{
-				"rid":    param.Rid,
+				"uid":    param.Uid,
 				"path":   param.Path,
 				"result": value.(string),
 			})
@@ -53,15 +53,12 @@ func (api *BaseApi) Seed() {
 	}
 	helper.ApiRequest.ShouldBindAll(api.Context, &param)
 	//
-	md5 := common.StringMd5(param.Cmd)
-	//
-	if len(param.Rid) > 0 && len(param.Cmd) > 0 {
-
+	if len(param.Uid) > 0 && len(param.Cmd) > 0 {
 		go core.GlobalEventBus.Publish("Task.PushTask.Start", map[string]any{
-			"uid": "127.0.0.1",
+			"uid": common.StringMd5("127.0.0.1"),
 			"msg": map[string]any{
 				"type": "file",
-				"md5":  md5,
+				"md5":  common.StringMd5(param.Cmd),
 				"file": map[string]any{
 					"type":    "bash",
 					"path":    param.Path,
@@ -77,9 +74,9 @@ func (api *BaseApi) Seed() {
 	for i := 0; i < 300; i++ {
 		time.Sleep(100 * time.Millisecond)
 		// 获取缓存
-		if value, found := core.Cache.Get(md5); found {
+		if value, found := core.Cache.Get(common.StringMd5(param.Cmd)); found {
 			helper.ApiResponse.Success(api.Context, map[string]any{
-				"rid":    param.Rid,
+				"uid":    param.Uid,
 				"path":   param.Path,
 				"result": value.(string),
 			})

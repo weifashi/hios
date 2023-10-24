@@ -8,8 +8,8 @@ import (
 	"hios/app/interfaces"
 	"hios/app/service"
 	"hios/core"
+	"hios/utils/common"
 	"net/http"
-	"strconv"
 	"sync"
 	"time"
 
@@ -44,10 +44,11 @@ func (api *BaseApi) Ws() {
 	}
 
 	wsRid++
+	ipMd5str := common.StringMd5(api.Context.ClientIP())
 	client := interfaces.WsClient{
 		Conn: conn,
 		Type: api.Context.DefaultQuery("type", constant.WsIsUnknown),
-		Uid:  api.Context.ClientIP(),
+		Uid:  api.Context.DefaultQuery("uid", ipMd5str),
 		Rid:  wsRid,
 		Ip:   api.Context.ClientIP(),
 	}
@@ -55,9 +56,6 @@ func (api *BaseApi) Ws() {
 	//
 	if api.Token != "" {
 		client.Type = constant.WsIsUser
-		if api.Userinfo != nil {
-			client.Uid = strconv.Itoa(api.Userinfo.Id)
-		}
 	}
 
 	// 完成时关闭连接释放资源
@@ -168,7 +166,7 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	service.WebSocketService.SaveUser(int(client.Rid), client.Uid)
 
 	// 客户端上线
-	service.ClientService.GoLive(client.Ip, client.Type)
+	service.ClientService.GoLive(client.Uid, client.Ip, client.Type)
 
 	// 发送open事件
 	go core.GlobalEventBus.Publish("Task.PushTask.PushMsg", int(client.Rid), map[string]interface{}{
@@ -198,7 +196,7 @@ func (api *BaseApi) wsOfflineClients(rid int32) {
 			// 清除用户
 			service.WebSocketService.DeleteUser(int(client.Rid))
 			// 客户端离线
-			service.ClientService.Offline(client.Ip)
+			service.ClientService.Offline(client.Uid)
 			break
 		}
 	}
