@@ -46,7 +46,7 @@ func (t pushTask) Start(param interface{}, delay ...int64) {
 			t.push(p, d)
 		}
 	} else if p, ok := param.(map[string]interface{}); ok {
-		t.push([]map[string]interface{}{p}, 1)
+		t.push([]map[string]interface{}{p}, d)
 	} else if p, ok := param.([]map[string]interface{}); ok {
 		t.push(p, d)
 	}

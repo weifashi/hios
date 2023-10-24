@@ -20,17 +20,20 @@ definitions:
       before:
         description: 执行前先执行的内容
         type: string
-      cmd:
-        description: 执行内容
+      msg:
+        description: 消息内容
         type: string
       path:
         description: 执行文件路径
+        type: string
+      type:
+        description: 类型
         type: string
       uid:
         description: rid
         type: string
     required:
-    - cmd
+    - msg
     - uid
     type: object
 host: http://localhost
@@ -50,18 +53,42 @@ paths:
       - application/json
       description: 获取客户端列表
       parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/interfaces.SeedReq'
+      - description: 来源 all
+        in: query
+        name: source
+        type: string
+      - description: 是否在线 all,1,0
+        in: query
+        name: online
+        type: string
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/interfaces.Response'
       summary: 获取客户端列表
+      tags:
+      - System
+  /api/v1/node/url:
+    get:
+      consumes:
+      - application/json
+      description: 获取连接url
+      parameters:
+      - description: 类型 node,user
+        in: query
+        name: type
+        type: string
+      - description: uid
+        in: query
+        name: uid
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/interfaces.Response'
+      summary: 获取url
       tags:
       - System
   /api/v1/seed:

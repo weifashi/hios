@@ -6,6 +6,7 @@ import (
 	"hios/app/constant"
 	"hios/app/helper"
 	"hios/app/interfaces"
+	"hios/app/model"
 	"hios/app/service"
 	"hios/core"
 	"hios/utils/common"
@@ -33,6 +34,11 @@ var (
 // @Param request query interfaces.WebsocketReq true "request"
 // @Router /api/v1/ws [get]
 func (api *BaseApi) Ws() {
+	sing := api.Context.Query("sing")
+	useragent := api.Context.Request.UserAgent()
+	types := api.Context.DefaultQuery("type", constant.WsIsUnknown)
+	uid := api.Context.DefaultQuery("uid", common.StringMd5(api.Context.ClientIP()))
+	//
 	if api.Context.Request.Header.Get("Upgrade") != "websocket" {
 		helper.ApiResponse.ErrorWith(api.Context, constant.ErrNotSupport, nil)
 		return
@@ -42,13 +48,27 @@ func (api *BaseApi) Ws() {
 		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, err)
 		return
 	}
+	// 验证签名
+	var singModel = model.SingModel
+	if err := core.DB.Where("sing = ?", sing).First(&singModel).Error; err != nil {
+		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, err)
+		return
+	}
+	if singModel.Use && singModel.Md5 != common.StringMd5(useragent+uid) {
+		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, nil)
+		return
+	}
+	singModel.Use = true
+	singModel.Md5 = common.StringMd5(useragent + uid)
+	core.DB.Save(singModel)
 
+	//
 	wsRid++
-	ipMd5str := common.StringMd5(api.Context.ClientIP())
+
 	client := interfaces.WsClient{
 		Conn: conn,
-		Type: api.Context.DefaultQuery("type", constant.WsIsUnknown),
-		Uid:  api.Context.DefaultQuery("uid", ipMd5str),
+		Type: types,
+		Uid:  uid,
 		Rid:  wsRid,
 		Ip:   api.Context.ClientIP(),
 	}

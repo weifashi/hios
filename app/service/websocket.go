@@ -61,7 +61,6 @@ func (ws webSocketService) DeleteUser(fd int) {
 // 发送给相同访问状态的会员
 func (ws webSocketService) PushPath(path string) {
 	// 打印日志
-	fmt.Println("推送消息给相同访问状态的会员:", path)
 	var uids []string
 	core.DB.Model(&model.WebSocket{}).Where("path = ?", path).Pluck("uid", &uids)
 	if len(uids) > 0 {

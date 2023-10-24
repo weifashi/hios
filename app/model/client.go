@@ -2,7 +2,7 @@ package model
 
 import "hios/core"
 
-// WebSocket WebSocket连接
+// Client客户端表
 type Client struct {
 	Id     int    `gorm:"primary_key;auto_increment" json:"id"`
 	Uid    string `gorm:"type:varchar(36);default:'';comment:客户端标识" json:"uid"`

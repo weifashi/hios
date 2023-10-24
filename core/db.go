@@ -30,8 +30,8 @@ func InDB(str string) (*gorm.DB, error) {
 	dbConfig := &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   "pre_", // 表名前缀
-			SingularTable: false,  // true:单数 false:复数
+			TablePrefix:   "xw_hios_", // 表名前缀
+			SingularTable: false,      // true:单数 false:复数
 		},
 	}
 	// 数据库类型

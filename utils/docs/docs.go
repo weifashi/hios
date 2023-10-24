@@ -33,13 +33,50 @@ const docTemplate = `{
                 "summary": "获取客户端列表",
                 "parameters": [
                     {
-                        "description": "request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
+                        "type": "string",
+                        "description": "来源 all",
+                        "name": "source",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "是否在线 all,1,0",
+                        "name": "online",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/interfaces.SeedReq"
+                            "$ref": "#/definitions/interfaces.Response"
                         }
+                    }
+                }
+            }
+        },
+        "/api/v1/node/url": {
+            "get": {
+                "description": "获取连接url",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "获取url",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "类型 node,user",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "uid",
+                        "name": "uid",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -134,7 +171,7 @@ const docTemplate = `{
         "interfaces.SeedReq": {
             "type": "object",
             "required": [
-                "cmd",
+                "msg",
                 "uid"
             ],
             "properties": {
@@ -146,12 +183,16 @@ const docTemplate = `{
                     "description": "执行前先执行的内容",
                     "type": "string"
                 },
-                "cmd": {
-                    "description": "执行内容",
+                "msg": {
+                    "description": "消息内容",
                     "type": "string"
                 },
                 "path": {
                     "description": "执行文件路径",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "类型",
                     "type": "string"
                 },
                 "uid": {

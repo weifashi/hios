@@ -50,7 +50,14 @@ func Init() error {
 		return defaultMigration[i].ID < defaultMigration[j].ID
 	})
 	//
-	m := gormigrate.New(core.DB, gormigrate.DefaultOptions, defaultMigration)
+	defaultOptions := &gormigrate.Options{
+		TableName:                 "xw_hios_migrations",
+		IDColumnName:              "id",
+		IDColumnSize:              255,
+		UseTransaction:            false,
+		ValidateUnknownMigrations: false,
+	}
+	m := gormigrate.New(core.DB, defaultOptions, defaultMigration)
 	if err := m.Migrate(); err != nil {
 		return err
 	}
