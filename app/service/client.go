@@ -8,6 +8,7 @@ import (
 	"hios/app/model"
 	"hios/core"
 	"io"
+	"time"
 )
 
 var ClientService = clientService{}
@@ -66,5 +67,8 @@ func (ws clientService) CreateUrl(types string, uid string) string {
 	sing := hex.EncodeToString(hash[:])
 	//
 	core.DB.Create(&model.Sing{Sing: sing})
+	core.DB.Where("use = 0 and created_at <= ?", time.Now().Add(-30*time.Minute)).Delete(&model.Sing{})
+	core.DB.Where("use = 1 and updated_at <= ?", time.Now().Add(-24*7*time.Hour)).Delete(&model.Sing{})
+	//
 	return url + "&sing=" + sing
 }
