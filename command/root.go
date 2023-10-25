@@ -10,7 +10,6 @@ import (
 	"hios/utils/common"
 	"hios/web"
 	"html/template"
-	"io"
 	"os"
 	"time"
 
@@ -79,16 +78,23 @@ var rootCommand = &cobra.Command{
 			} else {
 				gin.SetMode(gin.ReleaseMode)
 			}
-			gin.DefaultWriter = io.Discard
-			r := gin.Default()
-			r.Use(middleware.CustomLogger())
-			r.Use(middleware.OperationLog())
-			r.Use(gzip.Gzip(gzip.DefaultCompression))
-			r.SetHTMLTemplate(t)
-			r.Any("/*path", func(context *gin.Context) {
+
+			// 设置日志输出到文件
+			file, _ := os.OpenFile("work/logs/request.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+			defer file.Close()
+			gin.DefaultWriter = file
+			gin.DefaultErrorWriter = file
+
+			// 设置路由
+			routers := gin.Default()
+			routers.Use(middleware.OperationLog())
+			routers.Use(gzip.Gzip(gzip.DefaultCompression))
+			routers.SetHTMLTemplate(t)
+			routers.Any("/*path", func(context *gin.Context) {
 				router.Init(context)
 			})
-			_ = r.Run(fmt.Sprintf("%s:%s", config.CONF.System.Host, config.CONF.System.Port))
+			routers.Run(fmt.Sprintf("%s:%s", config.CONF.System.Host, config.CONF.System.Port))
+
 			//
 			common.PrintSuccess("启动成功: http://localhost:" + config.CONF.System.Port)
 		}

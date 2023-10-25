@@ -17,7 +17,23 @@ var logCmd = &cobra.Command{
 	Use:   "log",
 	Short: "查看日志",
 	Run: func(c *cobra.Command, args []string) {
-		cmd := exec.Command("tail", "-f", "work/logs/wsc.log")
+
+		f := "work/logs/request.log"
+
+		if len(args) > 0 {
+			if args[0] == "wsc" || args[0] == "c" {
+				f = "work/logs/wsc.log"
+			}
+			if args[0] == "wss" || args[0] == "s" {
+				f = "work/logs/wss.log"
+			}
+			if args[0] == "request" || args[0] == "r" {
+				f = "work/logs/request.log"
+			}
+		}
+
+		//
+		cmd := exec.Command("tail", "-f", f)
 
 		// 创建一个管道，用于获取命令的标准输出
 		stdoutPipe, err := cmd.StdoutPipe()

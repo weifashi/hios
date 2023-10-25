@@ -261,9 +261,7 @@ func (this *LocalLogger) writeMsg(logLevel int, msg string, v ...interface{}) er
 		strim = this.usePath
 	}
 	if ok {
-
-		src = strings.Replace(
-			fmt.Sprintf("%s:%d", stringTrim(file, strim), lineno), "%2e", ".", -1)
+		src = strings.Replace(fmt.Sprintf("%s:%d", stringTrim(file, strim), lineno), "%2e", ".", -1)
 	}
 
 	msgSt.Level = levelPrefix[logLevel]
