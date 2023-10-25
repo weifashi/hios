@@ -1,11 +1,5 @@
 <template>
 
-    <v-ace-editor
-    v-model:value="content"
-    @init="editorInit"
-    lang="html"
-    theme="chrome"
-    style="height: 300px;width: 500px;" />
     <n-space vertical v-if="0">
         <n-layout class="root-layout" has-sider>
             <!-- <n-layout-header>颐和园路</n-layout-header> -->
@@ -36,18 +30,6 @@ import { useLoadingBar, useMessage } from 'naive-ui'
 import { loadingBarApiRef } from "../routes";
 import { UserStore } from "../store/user";
 import { GlobalStore } from '@/store';
-
-import { VAceEditor } from 'vue3-ace-editor';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/theme-chrome';
-
-
-const content = "useMessage()"
-const editorInit = (e) => {
-    console.log(e);
-    
-}
-
 
 const message = useMessage()
 const userStore = UserStore()

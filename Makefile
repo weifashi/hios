@@ -15,7 +15,7 @@ run: build
 	
 build:
 	cd web && npm i && npm run build && cd ../ 
-	$(GOCGO) go build -trimpath -ldflags "$(LDFLAGS)" -o main
+	$(GOCGO) go build -trimpath -ldflags "$(LDFLAGS)" -o hios
 
 release:
 	$(GOCGO) GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./$(MODULE)-$(VERSION)-linux-amd64/$(MODULE)

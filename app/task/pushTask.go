@@ -228,7 +228,7 @@ func (t pushTask) pushWriteMessage(v interfaces.WsClient, msgJSON []byte) {
 	if v.Conn != nil && v.Conn.UnderlyingConn() != nil {
 		//
 		logger.SetLogger(`{"File":{"filename":"work/logs/wss.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`)
-		logger.Info("[%s] : %s", "wss-send", msgJSON)
+		logger.Info("[%s] %s", "wss-send", msgJSON)
 		//
 		if err := v.Conn.WriteMessage(websocket.TextMessage, msgJSON); err != nil {
 			if !websocket.IsCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
