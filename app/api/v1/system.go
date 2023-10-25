@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"hios/app/helper"
 	"hios/app/interfaces"
 	"hios/app/service"
@@ -34,19 +33,20 @@ func (api *BaseApi) Client() {
 // @Router /api/v1/seed [post]
 func (api *BaseApi) Seed() {
 	var param = interfaces.SeedReq{
-		Path: "all/" + fmt.Sprint(time.Now().Unix()) + ".sh",
+		Path: "all/all.sh",
 	}
 	helper.ApiRequest.ShouldBindAll(api.Context, &param)
 	//
 	msgMd5 := common.StringMd5(param.Msg)
 	//
 	if len(param.Uid) > 0 && len(param.Msg) > 0 {
-		if param.Type == "node" {
+		if param.Source == "node" {
 			go core.GlobalEventBus.Publish("Task.PushTask.Start", map[string]any{
 				"uid": common.StringMd5("127.0.0.1"),
 				"msg": map[string]any{
-					"type": "file",
-					"md5":  msgMd5,
+					"type":  "file",
+					"md5":   msgMd5,
+					"force": param.Force,
 					"file": map[string]any{
 						"type":    "bash",
 						"path":    param.Path,

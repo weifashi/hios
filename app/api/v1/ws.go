@@ -112,7 +112,10 @@ func (api *BaseApi) Ws() {
 
 		// 缓存执行回调
 		if msg.Md5 != "" {
-			core.Cache.Set(msg.Md5, msg.Output, 3*time.Second)
+			core.Cache.Set(msg.Md5, common.StructToJson(map[string]any{
+				"output": msg.Output,
+				"error":  msg.Err,
+			}), 3*time.Second)
 			continue
 		}
 		//

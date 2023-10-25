@@ -183,12 +183,20 @@ const docTemplate = `{
                     "description": "执行前先执行的内容",
                     "type": "string"
                 },
+                "force": {
+                    "description": "是否强制发送（默认5秒内不能发送重覆指令）",
+                    "type": "boolean"
+                },
                 "msg": {
                     "description": "消息内容",
                     "type": "string"
                 },
                 "path": {
                     "description": "执行文件路径",
+                    "type": "string"
+                },
+                "source": {
+                    "description": "类型",
                     "type": "string"
                 },
                 "type": {

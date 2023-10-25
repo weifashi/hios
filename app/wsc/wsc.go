@@ -2,6 +2,7 @@ package wsc
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"hios/config"
 	"hios/utils/cmd"
@@ -26,6 +27,7 @@ type msgModel struct {
 	Md5     string    `json:"md5"`
 	Type    string    `json:"type"`
 	Content string    `json:"content"`
+	Force   bool      `json:"force"`
 	File    fileModel `json:"file"`
 	Cmd     cmdModel  `json:"cmd"`
 }
@@ -97,9 +99,7 @@ func WorkStart() {
 		done <- true
 	})
 	ws.OnTextMessageSent(func(message string) {
-		// if !strings.HasPrefix(message, "r:") {
-		// 	logger.Debug("[ws] text message sent: ", message)
-		// }
+		logger.Debug("[ws] text message sent: ", string(message))
 	})
 	ws.OnBinaryMessageSent(func(data []byte) {
 		logger.Debug("[ws] binary message sent: ", string(data))
@@ -115,9 +115,6 @@ func WorkStart() {
 	})
 	ws.OnTextMessageReceived(func(message string) {
 		logger.Debug("[ws] text message received: ", message)
-		// if strings.HasPrefix(message, "r:") {
-		// 	message = xrsa.Decrypt(message[2:], nodePublic, nodePrivate) // 判断数据解密
-		// }
 		handleMessageReceived(ws, message)
 	})
 	ws.OnBinaryMessageReceived(func(data []byte) {
@@ -152,7 +149,7 @@ func handleMessageReceived(wss *wsc.Wsc, message string) (string, error) {
 	if ok := json.Unmarshal([]byte(message), &data); ok == nil {
 		if data.Type == "file" {
 			// 保存文件
-			output, err := handleMessageFile(data.File, false)
+			output, err := handleMessageFile(data.File, data.Force)
 			errs := ""
 			if err != nil {
 				errs = err.Error()
@@ -207,10 +204,13 @@ func handleMessageFile(fileData fileModel, force bool) (string, error) {
 	fileKey := common.StringMd5(fileData.Path)
 	contentKey := common.StringMd5(fileContent)
 	if !force {
+		fileInfo, _ := os.Stat(fileData.Path)
+		timeDiff := time.Since(fileInfo.ModTime())
+		fiveMinutesAgo := time.Duration(5) * time.Second
 		md5Value, _ := FileMd5.Load(fileKey)
-		if md5Value != nil && md5Value.(string) == contentKey {
+		if md5Value != nil && md5Value.(string) == contentKey && timeDiff < fiveMinutesAgo {
 			logger.Debug("#%s# [file] same: %s", fileData.Loguid, fileData.Path)
-			return "", nil
+			return "", errors.New("file same")
 		}
 	}
 	FileMd5.Store(fileKey, contentKey)
