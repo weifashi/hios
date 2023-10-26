@@ -60,7 +60,6 @@ var rootCommand = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// 连接服务端
 		if config.CONF.System.WssUrl != "" {
 			wsc.WorkStart()
@@ -93,10 +92,11 @@ var rootCommand = &cobra.Command{
 			routers.Any("/*path", func(context *gin.Context) {
 				router.Init(context)
 			})
-			routers.Run(fmt.Sprintf("%s:%s", config.CONF.System.Host, config.CONF.System.Port))
-
 			//
 			common.PrintSuccess("启动成功: http://localhost:" + config.CONF.System.Port)
+			//
+			routers.Run(fmt.Sprintf("%s:%s", config.CONF.System.Host, config.CONF.System.Port))
+			//
 		}
 
 	},

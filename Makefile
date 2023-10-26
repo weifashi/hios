@@ -1,30 +1,32 @@
 export PATH := $(GOPATH)/bin:$(PATH)
 export GO111MODULE=on
 
-MODULE = fileWarehouse
+MODULE = hios
 
-PORT 			:= 3358
-VERSION			:= $(shell git describe --tags --always --match="v*" 2> /dev/null || echo v0.0.0)
+PORT 			:= 3376
+VERSION			:= $(shell git describe --tags --always --match="v*" 2> /dev/null || echo v0.0.1)
 VERSION_HASH	:= $(shell git rev-parse --short HEAD)
 
 GOCGO 	:= env CGO_ENABLED=1
 LDFLAGS	:= -s -w -X "$(MODULE)/config.Version=$(VERSION)" -X "$(MODULE)/config.CommitSHA=$(VERSION_HASH)"
 
 run: build
-	./main --mode debug
-	
-build:
-	cd web && npm i && npm run build && cd ../ 
-	$(GOCGO) go build -trimpath -ldflags "$(LDFLAGS)" -o hios
+	./release/hios
 
-release:
-	$(GOCGO) GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./$(MODULE)-$(VERSION)-linux-amd64/$(MODULE)
-	$(GOCGO) GOOS=linux GOARCH=arm64 CC=aarch64-linux-gnu-gcc-10 go build -trimpath -ldflags "$(LDFLAGS)" -o ./$(MODULE)-$(VERSION)-linux-arm64/$(MODULE)
+build:
+	go build -o ./release/hios
+
+releases: 
+	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE)
+	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=arm64 go build  -o ./release/$(MODULE)-linux-arm64/$(MODULE)
 	@for arch in amd64 arm64; \
 	do \
-		cp install/* $(MODULE)-$(VERSION)-linux-$$arch; \
-		tar zcf $(MODULE)-$(VERSION)-linux-$$arch.tar.gz $(MODULE)-$(VERSION)-linux-$$arch; \
+		cp install/* ./release/$(MODULE)-linux-$$arch; \
+		tar zcf ./release/$(MODULE)-linux-$$arch.tar.gz ./release/$(MODULE)-linux-$$arch; \
 	done
+
+docker-build:
+	docker run --rm -v "${PWD}":/myapp -w /myapp golang:1.20 bash -c "make build"
 
 dev:
 	lsof -i :3377 | grep node | awk '{print $$2}' | xargs kill -9
