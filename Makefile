@@ -18,14 +18,19 @@ build:
 	go build -o ./release/hios
 
 releases: 
-	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE)
+    $(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE)
 	tar zcf ./release/$(MODULE)-linux-amd64.tar.gz ./release/$(MODULE)-linux-amd64 ; \
 	rm -r ./release/$(MODULE)-linux-amd64
+
+tag: 
 	git tag $(NEXT_VERSION)
 	git push origin $(NEXT_VERSION)
 
+docker-releases:
+	docker run --rm -v "${PWD}":/myapp -w /myapp golang:1.20 bash -c "make releases"
+
 docker-build:
-	docker run --rm -v "${PWD}":/myapp -w /myapp golang:1.20 bash -c "make build"
+	docker run --rm -v "${PWD}":/myapp -w /myapp golang:1.20 bash -c "GOOS=linux GOARCH=amd64 go build"
 
 dev:
 	lsof -i :3377 | grep node | awk '{print $$2}' | xargs kill -9
@@ -45,3 +50,13 @@ translate:
 # 提示 swag: No such file or directory 时解決辦法
 # go get -u github.com/swaggo/swag/cmd/swag
 # go install github.com/swaggo/swag/cmd/swag@latest
+
+
+# 下载
+# wget https://gitee.com/weifashi/hios/raw/v0.0.5/release/hios-linux-amd64.tar.gz
+# 	tar -zxf hios-linux-amd64.tar.gz
+# 	rm -f hios-linux-amd64.tar.gz
+# 	mkdir /usr/lib/weifashi
+# 	mv ./release/hios-linux-amd64/hios /usr/lib/weifashi/hios
+# 	rm -r ./release
+# 	chmod +x /usr/lib/weifashi/hios
