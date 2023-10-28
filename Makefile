@@ -17,16 +17,12 @@ run: build
 build:
 	go build -o ./release/hios
 
-releases: 
-    $(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE)
+releases:
+	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE) ; \
 	tar zcf ./release/$(MODULE)-linux-amd64.tar.gz ./release/$(MODULE)-linux-amd64 ; \
 	rm -r ./release/$(MODULE)-linux-amd64
 
-releases-tag: 
-	git tag $(NEXT_VERSION)
-	git push origin $(NEXT_VERSION)
-
-docker-releases:
+docker-releases: 
 	docker run --rm -v "${PWD}":/myapp -w /myapp golang:1.20 bash -c "make releases"
 
 docker-build:
@@ -39,7 +35,6 @@ dev:
 
 translate:
 	cd web && npm run translate $(text) && cd ../
-
 
 # 提示 fresh: No such file or directory 时解決辦法
 # go install github.com/pilu/fresh@latest
