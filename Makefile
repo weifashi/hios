@@ -18,12 +18,11 @@ build:
 
 releases: 
 	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE)
-	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-arm64/$(MODULE)
-	@for arch in amd64 arm64; \
+	@for arch in amd64; \
 	do \
-		cp install/* ./release/$(MODULE)-linux-$$arch; \
 		tar zcf ./release/$(MODULE)-linux-$$arch.tar.gz ./release/$(MODULE)-linux-$$arch; \
 	done
+	rm -r ./release/$(MODULE)-linux-amd64
 
 docker-build:
 	docker run --rm -v "${PWD}":/myapp -w /myapp golang:1.20 bash -c "make build"
