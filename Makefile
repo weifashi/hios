@@ -22,7 +22,7 @@ releases:
 	tar zcf ./release/$(MODULE)-linux-amd64.tar.gz ./release/$(MODULE)-linux-amd64 ; \
 	rm -r ./release/$(MODULE)-linux-amd64
 
-tag: 
+releases-tag: 
 	git tag $(NEXT_VERSION)
 	git push origin $(NEXT_VERSION)
 
