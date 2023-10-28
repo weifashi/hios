@@ -18,7 +18,7 @@ build:
 
 releases: 
 	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-amd64/$(MODULE)
-	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=arm64 go build  -o ./release/$(MODULE)-linux-arm64/$(MODULE)
+	$(GOCGO) CC=x86_64-linux-musl-gcc GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE)-linux-arm64/$(MODULE)
 	@for arch in amd64 arm64; \
 	do \
 		cp install/* ./release/$(MODULE)-linux-$$arch; \
