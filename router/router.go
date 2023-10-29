@@ -54,6 +54,7 @@ func Init(c *gin.Context) {
 			return
 		}
 	}
+
 	// 静态资源
 	if strings.HasPrefix(urlPath, "/assets") {
 		c.FileFromFS("dist"+urlPath, http.FS(web.Assets))

@@ -27,6 +27,7 @@ dev:
 ## build
 .PHONY: build
 build:
+	cd web && npm run build && cd ../
 	go build -o ./$(MODULE)
 
 ## build-run
@@ -37,6 +38,7 @@ build-run: build
 ## build-all
 .PHONY: build-all
 build-all: | ; $(info $(M) building all…)
+	cd web && npm run build && cd ../
 	$(shell mkdir -p release)
 	@$(foreach n, $(OS_ARCHS),\
 		os=$(shell echo "$(n)" | cut -d : -f 1);\
@@ -53,7 +55,7 @@ release: | ; $(info $(M) release all…)
 		os=$(shell echo "$(n)" | cut -d : -f 1);\
 		arch=$(shell echo "$(n)" | cut -d : -f 2);\
 		target_suffix=$${os}_$${arch};\
-		$(GOCGO) GOOS=$${os} GOARCH=$${arch} GOMIPS=$${gomips} go build  -o ./release/$(MODULE);\
+		$(GOCGO) GOOS=$${os} GOARCH=$${arch} GOMIPS=$${gomips} go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE);\
 		tar zcf ./release/$(MODULE)_$${target_suffix}.tar.gz ./release/$(MODULE);\
 		rm -r ./release/$(MODULE);\
 	)
