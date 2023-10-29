@@ -9,8 +9,8 @@ NEXT_VERSION    := $(shell git tag | tail -1 | awk -F. -v OFS=. '{$$NF++; print}
 
 GOCGO 			:= env CGO_ENABLED=1
 LDFLAGS			:= -s -w -X "$(MODULE)/config.Version=$(VERSION)" -X "$(MODULE)/config.CommitSHA=$(VERSION_HASH)"
-OS_ARCHS		:=linux:amd64
-# OS_ARCHS		:=darwin:amd64 darwin:arm64 linux:amd64 linux:arm64
+OS_ARCHS		:= linux:amd64
+# OS_ARCHS		:= darwin:amd64 darwin:arm64 linux:amd64 linux:arm64
 
 ## run
 .PHONY: run
@@ -63,7 +63,7 @@ release: | ; $(info $(M) release all…)
 ## docker-release
 .PHONY: docker-release
 docker-release: | ; $(info $(M) release all…)
-	docker run --rm -v "${PWD}":/myapp -w /myapp --platform linux/amd64 golang:1.20 bash -c "make release"
+	docker run --rm -v "${PWD}":/myapp -w /myapp --platform linux/amd64 golang:1.18 bash -c "make release"
 
 ## translate
 .PHONY: translate
