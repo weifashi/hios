@@ -84,11 +84,18 @@ translate:
 
 # 下载
 # os=$(uname -s | tr '[:upper:]' '[:lower:]')
-# archs=$(uname -m); [[ "$archs" == "x86_64" ]] && archs="amd64" || [[ "$archs" == "aarch64" ]] && archs="arm64"
-# wget"https://gitee.com/weifashi/hios/raw/v0.0.5/release/hios_${os}_${archs}.tar.gz"
+# archs=$(uname -m);
+# if [[ "$archs" == "x86_64" ]]; then
+#     archs="amd64"
+# elif [[ "$archs" == "aarch64" ]]; then
+#     archs="arm64"
+# fi
+# rm -rf hios_${os}_${archs}.tar.gz
+# wget "https://gitee.com/weifashi/hios/raw/v0.0.1/release/hios_${os}_${archs}.tar.gz"
 # tar -zxf hios_${os}_${archs}.tar.gz
-# rm -f hios_${os}_${archs}.tar.gz
+# rm -rf hios_${os}_${archs}.tar.gz
 # mkdir /usr/lib/weifashi
+# rm -f /usr/lib/weifashi/hios
 # mv ./release/hios /usr/lib/weifashi/hios
 # rm -r ./release
 # chmod +x /usr/lib/weifashi/hios
