@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  golang:
+    container_name: "hios-golang"
+    image: "golang:1.18"
+    platform: linux/amd64
+    volumes: 
+      - ./:/myapp
+    working_dir: /myapp
+    command: go run main.go 

@@ -9,8 +9,7 @@ NEXT_VERSION    := $(shell git tag | tail -1 | awk -F. -v OFS=. '{$$NF++; print}
 
 GOCGO 			:= env CGO_ENABLED=1
 LDFLAGS			:= -s -w -X "$(MODULE)/config.Version=$(VERSION)" -X "$(MODULE)/config.CommitSHA=$(VERSION_HASH)"
-OS_ARCHS		:= linux:amd64
-# OS_ARCHS		:= darwin:amd64 darwin:arm64 linux:amd64 linux:arm64
+OS_ARCHS		:= darwin:amd64 darwin:arm64
 
 ## run
 .PHONY: run
@@ -63,7 +62,9 @@ release: | ; $(info $(M) release all…)
 ## docker-release
 .PHONY: docker-release
 docker-release: | ; $(info $(M) release all…)
-	docker run --rm -v "${PWD}":/myapp -w /myapp --platform linux/amd64 golang:1.18 bash -c "make release"
+	make release
+	docker run --rm -v "${PWD}":/myapp -w /myapp --platform linux/amd64 golang:1.18 bash -c "make release OS_ARCHS=linux:amd64"
+	docker run --rm -v "${PWD}":/myapp -w /myapp --platform linux/arm64 golang:1.18 bash -c "make release OS_ARCHS=linux:arm64"
 
 ## translate
 .PHONY: translate
@@ -82,10 +83,12 @@ translate:
 # go install github.com/swaggo/swag/cmd/swag@latest
 
 # 下载
-# wget https://gitee.com/weifashi/hios/raw/v0.0.5/release/hios_linux_amd64.tar.gz
-# 	tar -zxf hios_linux_amd64.tar.gz
-# 	rm -f hios_linux_amd64.tar.gz
-# 	mkdir /usr/lib/weifashi
-# 	mv ./release/hios /usr/lib/weifashi/hios
-# 	rm -r ./release
-# 	chmod +x /usr/lib/weifashi/hios
+# os=$(uname -s | tr '[:upper:]' '[:lower:]')
+# archs=$(uname -m); [[ "$archs" == "x86_64" ]] && archs="amd64" || [[ "$archs" == "aarch64" ]] && archs="arm64"
+# wget"https://gitee.com/weifashi/hios/raw/v0.0.5/release/hios_${os}_${archs}.tar.gz"
+# tar -zxf hios_${os}_${archs}.tar.gz
+# rm -f hios_${os}_${archs}.tar.gz
+# mkdir /usr/lib/weifashi
+# mv ./release/hios /usr/lib/weifashi/hios
+# rm -r ./release
+# chmod +x /usr/lib/weifashi/hios

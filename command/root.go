@@ -58,6 +58,9 @@ var rootCommand = &cobra.Command{
 			common.PrintError(fmt.Sprintf("数据库初始化失败: %s", err.Error()))
 			os.Exit(1)
 		}
+		// 初始化工作目录
+		common.Mkdir("work", 0777)
+		common.Mkdir("work/logs", 0777)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// 连接服务端
@@ -79,7 +82,7 @@ var rootCommand = &cobra.Command{
 			}
 
 			// 设置日志输出到文件
-			file, _ := os.OpenFile("work/logs/request.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+			file, _ := os.OpenFile("./work/logs/request.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 			defer file.Close()
 			gin.DefaultWriter = file
 			gin.DefaultErrorWriter = file
@@ -98,7 +101,6 @@ var rootCommand = &cobra.Command{
 			routers.Run(fmt.Sprintf("%s:%s", config.CONF.System.Host, config.CONF.System.Port))
 			//
 		}
-
 	},
 }
 

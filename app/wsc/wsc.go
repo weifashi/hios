@@ -65,9 +65,7 @@ type callModel struct {
 // WorkStart Work开始
 func WorkStart() {
 	//
-	initWorkDir()
-	//
-	logger.SetLogger(`{"File":{"filename":"work/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`)
+	logger.SetLogger(`{"File":{"filename":"./work/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`)
 	//
 	origin := strings.Replace(config.CONF.System.WssUrl, "https://", "wss://", 1)
 	origin = strings.Replace(origin, "http://", "ws://", 1)
@@ -129,17 +127,6 @@ func WorkStart() {
 			return
 		}
 	}
-}
-
-// 初始化工作目录
-func initWorkDir() {
-	err := common.Mkdir(workDir, 0777)
-	if err != nil {
-		logger.Error(fmt.Sprintf("[start] failed to create log dir: %s\n", err.Error()))
-		os.Exit(1)
-	}
-	//
-	common.Mkdir(workDir+"/logs", 0777)
 }
 
 // 处理消息
