@@ -1,7 +1,7 @@
 export PATH := $(GOPATH)/bin:$(PATH)
 export GO111MODULE=on
 
-MODULE = hios
+MODULE = authentik-go
 
 VERSION			:= $(shell git tag | tail -1 2> /dev/null || echo v0.0.1)
 VERSION_HASH	:= $(shell git rev-parse --short HEAD)
@@ -13,8 +13,8 @@ OS_ARCHS		:= darwin:amd64 darwin:arm64
 
 ## run
 .PHONY: run
-run:
-	go run main.go
+run: check_web_dist
+	$(GOCGO) go run main.go
 
 ## dev
 .PHONY: dev
@@ -76,6 +76,14 @@ translate:
 check_node_modules:
     ifeq (,$(wildcard ./web/node_modules))
 		cd web && npm install && cd ../
+    endif
+
+## check_web_dist
+.PHONY: check_web_dist
+check_web_dist: check_node_modules
+	go mod tidy
+    ifeq (,$(wildcard ./web/dist))
+		cd web && npm run build && cd ../
     endif
 
 # 提示 fresh: No such file or directory 时解決辦法
