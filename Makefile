@@ -18,14 +18,14 @@ run:
 
 ## dev
 .PHONY: dev
-dev:
-	lsof -i :3377 | grep node | awk '{print $$2}' | xargs kill -9
-	cd web && nohup npm run dev > ../output.log >&1 & cd ../ 
-	${HOME}/go/bin/fresh -c ./fresh.conf
+dev: check_node_modules
+	lsof -i :8016 | grep node | awk '{print $$2}' | xargs kill -9
+	cd web && nohup npm run dev > ../output.log >&1 & cd ../
+	CGO_ENABLED=1 && ${HOME}/go/bin/fresh -c ./fresh.conf
 
 ## build
 .PHONY: build
-build:
+build: check_node_modules
 	cd web && npm run build && cd ../
 	go build -o ./$(MODULE)
 
@@ -71,6 +71,12 @@ docker-release: | ; $(info $(M) release all…)
 translate:
 	cd web && npm run translate $(text) && cd ../
 
+## check_node_modules
+.PHONY: check_node_modules
+check_node_modules:
+    ifeq (,$(wildcard ./web/node_modules))
+		cd web && npm install && cd ../
+    endif
 
 # 提示 fresh: No such file or directory 时解決辦法
 # go install github.com/pilu/fresh@latest
