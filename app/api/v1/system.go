@@ -86,7 +86,7 @@ func (api *BaseApi) Seed() {
 		}
 	}
 	//
-	helper.ApiResponse.Error(api.Context)
+	helper.ApiResponse.Error(api.Context, "参数错误")
 }
 
 // @Tags System

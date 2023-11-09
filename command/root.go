@@ -5,6 +5,7 @@ import (
 	"hios/config"
 	"hios/core"
 	"hios/database"
+	"hios/i18n"
 	"hios/router"
 	"hios/router/middleware"
 	"hios/utils/common"
@@ -21,6 +22,8 @@ import (
 	// Import to initialize task
 	_ "hios/app/task"
 	"hios/app/wsc"
+
+	ginI18n "github.com/gin-contrib/i18n"
 )
 
 var rootCommand = &cobra.Command{
@@ -92,6 +95,10 @@ var rootCommand = &cobra.Command{
 			routers.Use(middleware.OperationLog())
 			routers.Use(gzip.Gzip(gzip.DefaultCompression))
 			routers.SetHTMLTemplate(t)
+			routers.Use(i18n.GinI18nLocalize())
+			routers.SetFuncMap(template.FuncMap{
+				"Localize": ginI18n.GetMessage,
+			})
 			routers.Any("/*path", func(context *gin.Context) {
 				router.Init(context)
 			})

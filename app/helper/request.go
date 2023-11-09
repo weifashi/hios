@@ -81,12 +81,12 @@ func (r request) RemoveCookie(c *gin.Context, name string) {
 func (r request) ShouldBindAll(c *gin.Context, obj any) {
 	if err := c.ShouldBind(obj); err != nil {
 		logger.Error(err.Error())
-		ApiResponse.ErrorWith(c, constant.ErrInvalidParameter, err)
+		ApiResponse.Error(c, constant.ErrInvalidParameter, err)
 		panic(nil)
 	}
 	if err := c.ShouldBindJSON(obj); err != nil && err.Error() != "EOF" {
 		logger.Error(err.Error())
-		ApiResponse.ErrorWith(c, constant.ErrInvalidParameter, err)
+		ApiResponse.Error(c, constant.ErrInvalidParameter, err)
 		panic(nil)
 	}
 }

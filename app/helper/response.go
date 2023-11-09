@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"hios/i18n"
 	"net/http"
 	"net/url"
 	"strings"
@@ -53,24 +54,12 @@ func (r response) Response(c *gin.Context, code int, msg string, values ...any) 
 
 // Success 成功
 func (r response) Success(c *gin.Context, values ...any) {
-	r.Response(c, http.StatusOK, "success", values...)
+	sgDetail := i18n.GetMsgWithMap("成功", map[string]any{"detail": values})
+	r.Response(c, http.StatusOK, sgDetail, values...)
 }
 
 // Error 失败
-func (r response) Error(c *gin.Context, values ...any) {
-	r.Response(c, http.StatusBadRequest, "error", values...)
-}
-
-// ErrorWith 失败信息
-func (r response) ErrorWith(c *gin.Context, msgKey string, err error, values ...any) {
-	if err != nil {
-		r.Response(c, http.StatusBadRequest, err.Error(), values...)
-	} else {
-		r.Response(c, http.StatusBadRequest, "error", values...)
-	}
-}
-
-// ErrorAuth 身份失败
-func (r response) ErrorAuth(c *gin.Context, values ...any) {
-	r.Response(c, http.StatusUnauthorized, "", values...)
+func (r response) Error(c *gin.Context, msg string, values ...any) {
+	msgDetail := i18n.GetMsgWithMap(msg, map[string]any{"detail": values})
+	r.Response(c, http.StatusBadRequest, msgDetail)
 }

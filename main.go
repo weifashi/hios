@@ -14,7 +14,7 @@ import (
 // @host http://localhost
 // @BasePath /api/v1
 
-//go:generate swag init --parseDependency -o ./utils/docs -g ./main.go -d ./app -g ../main.go
+//go:generate swag init --parseDependency -o ./docs -g ./main.go -d ./app -g ../main.go
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	command.Execute()

@@ -40,22 +40,22 @@ func (api *BaseApi) Ws() {
 	uid := api.Context.DefaultQuery("uid", common.StringMd5(api.Context.ClientIP()))
 	//
 	if api.Context.Request.Header.Get("Upgrade") != "websocket" {
-		helper.ApiResponse.ErrorWith(api.Context, constant.ErrNotSupport, nil)
+		helper.ApiResponse.Error(api.Context, constant.ErrNotSupport)
 		return
 	}
 	conn, err := wsUpgrader.Upgrade(api.Context.Writer, api.Context.Request, nil)
 	if err != nil {
-		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, err)
+		helper.ApiResponse.Error(api.Context, constant.ErrConnFailed, err)
 		return
 	}
 	// 验证签名
 	var singModel = model.SingModel
 	if err := core.DB.Where("sing = ?", sing).First(&singModel).Error; err != nil {
-		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, err)
+		helper.ApiResponse.Error(api.Context, constant.ErrConnFailed, err)
 		return
 	}
 	if singModel.Use && singModel.Md5 != common.StringMd5(useragent+uid) {
-		helper.ApiResponse.ErrorWith(api.Context, constant.ErrConnFailed, nil)
+		helper.ApiResponse.Error(api.Context, constant.ErrConnFailed)
 		return
 	}
 	singModel.Use = true

@@ -69,6 +69,7 @@ docker-release: | ; $(info $(M) release all…)
 ## translate
 .PHONY: translate
 translate:
+	go run main.go translate
 	cd web && npm run translate $(text) && cd ../
 
 ## check_node_modules
