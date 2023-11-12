@@ -9,7 +9,7 @@ triggers:
         - master
     tags:
       prefix:
-        - ''
+        - v
 stages:
   - name: compile
     displayName: 编译
