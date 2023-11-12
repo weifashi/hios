@@ -23,13 +23,6 @@ stages:
         commands:
           - mkdir output
           - GOOS=linux GOARCH=amd64 go build -o output/main.amd64 main.go
-          - GOOS=linux GOARCH=386 go build -o output/main.linux32 main.go
-          - GOOS=windows GOARCH=amd64 go build -o output/main.win64.exe main.go
-          - GOOS=windows GOARCH=386 go build -o output/main.win32.exe main.go
-          - 'GOOS=darwin GOARCH=amd64 go build -o output/main.darwin main.go '
-          - chmod +X output/main.linux32
-          - ./output/main.linux32
-          - ''
         artifacts:
           - name: BUILD_ARTIFACT
             path:
