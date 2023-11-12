@@ -1,7 +1,7 @@
 export PATH := $(GOPATH)/bin:$(PATH)
 export GO111MODULE=on
 
-MODULE = authentik-go
+MODULE = hios
 
 VERSION			:= $(shell git tag | tail -1 2> /dev/null || echo v0.0.1)
 VERSION_HASH	:= $(shell git rev-parse --short HEAD)
@@ -56,7 +56,7 @@ release: | ; $(info $(M) release all…)
 		target_suffix=$${os}_$${arch};\
 		$(GOCGO) GOOS=$${os} GOARCH=$${arch} GOMIPS=$${gomips} go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE);\
 		tar zcf ./release/$(MODULE)_$${target_suffix}.tar.gz ./release/$(MODULE);\
-		rm -r ./release/$(MODULE);\
+		# rm -r ./release/$(MODULE);\
 	)
 
 ## docker-release
