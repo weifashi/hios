@@ -1,8 +1,6 @@
 package error
 
-import (
-	"github.com/pkg/errors"
-)
+import "errors"
 
 type WithError struct {
 	Msg    string
