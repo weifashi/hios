@@ -21,7 +21,6 @@ stages:
         displayName: Golang 构建
         golangVersion: '1.18'
         commands:
-          - GO111MODULE=on go mod tidy
           - mkdir output
           - GOOS=linux GOARCH=amd64 go build -o output/main.amd64 main.go
           - GOOS=linux GOARCH=386 go build -o output/main.linux32 main.go
@@ -37,7 +36,6 @@ stages:
               - ./output
         caches:
           - /go/pkg/mod
-    
       - step: publish@general_artifacts
         name: publish_general_artifacts
         displayName: 上传制品
