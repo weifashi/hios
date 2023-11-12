@@ -21,6 +21,7 @@ stages:
         displayName: Golang 构建
         golangVersion: '1.8'
         commands:
+          - GO111MODULE=on go mod tidy
           - mkdir output
           - GOOS=linux GOARCH=amd64 go build -o output/main.amd64 main.go
           - GOOS=linux GOARCH=386 go build -o output/main.linux32 main.go
