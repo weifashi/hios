@@ -21,7 +21,6 @@ stages:
         displayName: Golang 构建
         golangVersion: '1.8'
         commands:
-          - go mod tidy
           - mkdir output
           - GOOS=linux GOARCH=amd64 go build -o output/main.amd64 main.go
           - GOOS=linux GOARCH=386 go build -o output/main.linux32 main.go
@@ -35,6 +34,8 @@ stages:
           - name: BUILD_ARTIFACT
             path:
               - ./output
+        caches:
+          - /go/pkg/mod
         strategy:
           retry: '1'
       - step: publish@general_artifacts
