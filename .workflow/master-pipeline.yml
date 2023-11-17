@@ -23,11 +23,7 @@ stages:
         commands:
           - export GOPROXY=https://goproxy.cn
           - mkdir output
-          - CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o output/main.amd64 main.go
-          - CGO_ENABLED=1 GOOS=linux GOARCH=386 go build -o output/main.linux32 main.go
-          - CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o output/main.darwin main.go
-          - chmod +X output/main.linux32
-          - ./output/main.linux32
+          - meke build-all
           - ''
         artifacts:
           - name: BUILD_ARTIFACT
