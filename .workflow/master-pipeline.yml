@@ -13,8 +13,10 @@ triggers:
 stages:
   - name: compile
     displayName: 编译
-    strategy: naturally
-    trigger: auto
+    strategy: fast
+    trigger: manual
+    executor:
+      - weifashi
     steps:
       - step: build@nodejs
         name: build_nodejs
@@ -46,7 +48,7 @@ stages:
           - env CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o output/main.amd64 main.go
           - env CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -o output/main.win64.exe main.go
           - env CGO_ENABLED=1 GOOS=windows GOARCH=386 go build -o output/main.win32.exe main.go
-          - env CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o output/main.darwin main.go 
+          - env CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o output/main.darwin main.go
           - chmod +X output/main.amd64
           - ./output/main.amd64
         artifacts:
