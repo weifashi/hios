@@ -9,7 +9,10 @@ triggers:
         - master
     tags:
       prefix:
-        - v
+        - v0
+    commitMessages:
+      include:
+        - .*build.*
 stages:
   - name: compile
     displayName: 编译
