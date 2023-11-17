@@ -23,7 +23,7 @@ stages:
         commands:
           - export GOPROXY=https://goproxy.cn
           - mkdir output
-          - meke build-all
+          - make build-all
           - ''
         artifacts:
           - name: BUILD_ARTIFACT
