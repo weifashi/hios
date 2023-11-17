@@ -50,8 +50,7 @@ stages:
           - mkdir output
           - env CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o output/main.linux.amd64 main.go
           - env CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o output/main.darwin.amd64 main.go
-          - chmod +X output/main.linux.amd64
-          - ./output/main.linux.amd64
+          - ""
         artifacts:
           - name: BUILD_ARTIFACT
             path:
