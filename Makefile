@@ -9,7 +9,7 @@ NEXT_VERSION    := $(shell git tag | tail -1 | awk -F. -v OFS=. '{$$NF++; print}
 
 GOCGO 			:= env CGO_ENABLED=1
 LDFLAGS			:= -s -w -X "$(MODULE)/config.Version=$(VERSION)" -X "$(MODULE)/config.CommitSHA=$(VERSION_HASH)"
-OS_ARCHS		:= darwin:amd64 darwin:arm64
+OS_ARCHS		:= darwin:amd64 darwin:arm64 linux:amd64 linux:arm64
 
 ## run
 .PHONY: run
@@ -37,7 +37,6 @@ build-run: build
 ## build-all
 .PHONY: build-all
 build-all: | ; $(info $(M) building all…)
-	cd web && npm run build && cd ../
 	$(shell mkdir -p release)
 	@$(foreach n, $(OS_ARCHS),\
 		os=$(shell echo "$(n)" | cut -d : -f 1);\
