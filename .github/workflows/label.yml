@@ -39,13 +39,13 @@ jobs:
           npm install
           npm run build
           cd ../
-          go build -o Hios_$(uname)_$(uname -m)
-
+          go build -o Hios_${{ matrix.os }}_${{ matrix.platform }}
+          
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
         with:
           name: Hios_${{ matrix.os }}_${{ matrix.platform }}
-          path: release/Hios_$(uname)_$(uname -m)
+          path: ./Hios_${{ matrix.os }}_${{ matrix.platform }}
 
     #   - name: Upload Release Asset
     #     uses: actions/upload-release-asset@v1
