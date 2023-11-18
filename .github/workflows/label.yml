@@ -21,10 +21,10 @@ jobs:
     
       - name: Build Vue
         run: |
-          cd vue-project
+          cd web
           npm install
           npm run build
-          mv dist ../golang-project/dist
+          mv dist ../web/dist
 
   build-windows:
     runs-on: windows-latest
