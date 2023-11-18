@@ -1,22 +1,72 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
-# https://github.com/actions/labeler
+# .github/workflows/build.yml
 
-name: Labeler
-on: [pull_request_target]
+name: Go Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  label:
-
+  build-vue:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-
     steps:
-    - uses: actions/labeler@v4
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+    
+      - name: Build Vue
+        run: |
+          cd vue-project
+          npm install
+          npm run build
+          mv dist ../golang-project/dist
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Build Windows
+        run: GOOS=windows GOARCH=amd64 go build -o myapp_windows.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Build Linux
+        run: GOOS=linux GOARCH=amd64 go build -o myapp_linux
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Build macOS
+        run: GOOS=darwin GOARCH=amd64 go build -o myapp_macos
