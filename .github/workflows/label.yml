@@ -24,10 +24,7 @@ jobs:
           cd web
           npm install
           npm run build
-          cd ../
-          mv web golang-web
-          cd golang-web
-          ls
+          mv dist ../vue-project-dist
           
   build-windows:
     needs: build-vue
@@ -61,11 +58,8 @@ jobs:
 
       - name: Build Linux
         run: |
-          cd golang-web
+          cd vue-project-dist
           ls
-          rm -r web
-          mv golang-web web
-          GOOS=linux GOARCH=amd64 go build -o myapp_linux
 
   build-macos:
     needs: build-vue
