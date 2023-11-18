@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-latest
 
     strategy:
@@ -38,5 +38,14 @@ jobs:
           npm install
           npm run build
           cd ../
-          GOOS=darwin GOARCH=amd64 go build -o myapp_macos
-          GOOS=linux GOARCH=amd64 go build -o myapp_macos
+          GOOS=darwin GOARCH=amd64 go build -o hios_darwin_amd64
+          GOOS=darwin GOARCH=amd64 go build -o hios_darwin_amd64
+          GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
+
+      - name: Archive Golang binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: myapp
+          path: golang-project/myapp
+
+          
