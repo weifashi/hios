@@ -45,6 +45,7 @@ jobs:
           cd ../
           env CGO_ENABLED=1 go build -o hios
           echo "build success"
+          ./hios
 
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
