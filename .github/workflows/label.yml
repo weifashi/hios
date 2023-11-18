@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu,macOS]
+        os: [ubuntu-latest, macOS-latest]
         platform: [amd64,arm64]
         
     steps:
