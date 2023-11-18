@@ -25,7 +25,7 @@ jobs:
           npm install
           npm run build
           cd ../
-          mv ./web ./golang-project
+          mv ./web ./golang-web
 
   build-windows:
     needs: build-vue
@@ -41,7 +41,8 @@ jobs:
 
       - name: Build Windows
         run: |
-          cd golang-project 
+          rm ./web
+          mv ./golang-web ./web
           go build -o myapp_windows.exe
 
   build-linux:
@@ -58,7 +59,8 @@ jobs:
 
       - name: Build Linux
         run: |
-          cd golang-project 
+          rm ./web
+          mv ./golang-web ./web
           GOOS=linux GOARCH=amd64 go build -o myapp_linux
 
   build-macos:
@@ -75,5 +77,6 @@ jobs:
 
       - name: Build macOS
         run: |
-          cd golang-project 
+          rm ./web
+          mv ./golang-web ./web
           GOOS=darwin GOARCH=amd64 go build -o myapp_macos
