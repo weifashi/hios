@@ -38,7 +38,7 @@ jobs:
           go-version: 1.18
 
       - name: Build Windows
-        run: GOOS=windows GOARCH=amd64 go build -o myapp_windows.exe
+        run: GOARCH=amd64 go build -o myapp_windows.exe
 
   build-linux:
     runs-on: ubuntu-latest
