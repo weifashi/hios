@@ -39,8 +39,7 @@ jobs:
           npm install
           npm run build
           cd ../
-          archs=$(uname -m)
-          echo hios_${uname}_${archs}
+          echo hios_$(uname)_$(uname -m)
           echo hios_${{ matrix.os }}_${{ matrix.platform }}
           go build -o hios_${{ matrix.os }}_${{ matrix.platform }}
         #   GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
