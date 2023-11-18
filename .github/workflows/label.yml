@@ -25,9 +25,10 @@ jobs:
           npm install
           npm run build
           cd ../
-          mkdir golang-web
           mv web golang-web
-
+          cd golang-web
+          ls
+          
   build-windows:
     needs: build-vue
     runs-on: windows-latest
@@ -60,6 +61,8 @@ jobs:
 
       - name: Build Linux
         run: |
+          cd golang-web
+          ls
           rm -r web
           mv golang-web web
           GOOS=linux GOARCH=amd64 go build -o myapp_linux
