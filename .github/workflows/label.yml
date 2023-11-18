@@ -56,11 +56,15 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Build Linux
+      - name: Prepare Golang
         run: |
+          mkdir -p vue-project-dist
           cp -R ../vue-project-dist vue-project-dist
           cd vue-project-dist
           ls
+
+      - name: Build Linux
+        run: GOOS=linux GOARCH=amd64 go build -o myapp_macos
 
   build-macos:
     needs: build-vue
