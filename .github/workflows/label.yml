@@ -49,6 +49,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+    
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -65,7 +73,12 @@ jobs:
     #       ls
 
       - name: Build Linux
-        run: GOOS=linux GOARCH=amd64 go build -o myapp_macos
+        run: |
+          cd web
+          npm install
+          npm run build
+          cd ../
+          GOOS=linux GOARCH=amd64 go build -o myapp_macos
 
 #   build-macos:
 #     needs: build-vue
