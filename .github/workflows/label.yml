@@ -55,8 +55,8 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Copy Vue dist files
-        run: cp -R web/dist web/dist
+    #   - name: Copy Vue dist files
+        # run: cp -R web/dist web/dist
     #   - name: Prepare Golang
     #     run: |
     #       mkdir -p vue-project-dist
