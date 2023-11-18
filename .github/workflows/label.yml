@@ -25,7 +25,7 @@ jobs:
           npm install
           npm run build
           cd ../
-          mv ./ ./golang-project
+          mv ./web ./golang-project
 
   build-windows:
     needs: build-vue
