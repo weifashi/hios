@@ -59,7 +59,7 @@ jobs:
       - name: Prepare Golang
         run: |
           mkdir -p vue-project-dist
-          cp -R ../vue-project-dist vue-project-dist
+          cp -R ../vue-project-dist/* vue-project-dist/
           cd vue-project-dist
           ls
 
