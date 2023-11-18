@@ -13,7 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, macOS-latest]
+        platform: [amd64, arm64]
         
     steps:
       - name: Checkout code
@@ -31,16 +32,25 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
+    
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
 
       - name: Build Linux
+        env:
+          GOARCH: arm64
         run: |
           cd web
           npm install
           npm run build
           cd ../
-          GOOS=darwin GOARCH=amd64 go build -o hios_${uname}_amd64
-          GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
-          GOOS=windows GOARCH=amd64 go build -o hios_windows_amd64.exe
+          archs=$(uname -m)
+          echo hios_${uname}_${archs}
+          go build -o hios_${uname}_${archs}
+        #   GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
+        #   GOOS=windows GOARCH=amd64 go build -o hios_windows_amd64.exe
 
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
