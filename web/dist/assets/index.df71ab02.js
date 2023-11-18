@@ -1,1 +1,0 @@
-import{_ as n,d as s,u as _,r as o,w as r,c as u,o as c,n as l}from"/assets/index.ff32a79d.js";const i=s({__name:"index",setup(d){const t=_(),e=o(null);return r(t,a=>{l(()=>{a.query.active==null&&e.value!=null&&e.value.getList("search")})},{immediate:!0}),(a,p)=>(c(),u("div",null,"\u4F60\u597D"))}});var f=n(i,[["__scopeId","data-v-c3d2baa0"]]);export{f as default};
