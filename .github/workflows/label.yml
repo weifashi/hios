@@ -40,16 +40,14 @@ jobs:
           npm run build
           cd ../
 
-          ARCHIVE_PATH=Hios_$(uname)_$(uname -m)
-          echo "ARCHIVE_PATH=${ARCHIVE_PATH}" >> $GITHUB_ENV
-          go build -o ${{ env.ARCHIVE_PATH }}
+          go build -o hios
 
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.ARCHIVE_PATH }}
-          path: ./${{ env.ARCHIVE_PATH }}
-          
+          name: Hios_$(uname -s)_${{ matrix.platform }}
+          path: ./hios
+
     #   - name: Upload Release Asset
     #     uses: actions/upload-release-asset@v1
     #     with:
