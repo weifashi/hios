@@ -39,16 +39,12 @@ jobs:
           npm install
           npm run build
           cd ../
-          echo hios_$(uname)_$(uname -m)
-          echo hios_${{ matrix.os }}_${{ matrix.platform }}
-          go build -o hios_${{ matrix.os }}_${{ matrix.platform }}
-        #   GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
-        #   GOOS=windows GOARCH=amd64 go build -o hios_windows_amd64.exe
+          go build -o Hios_$(uname)_$(uname -m)
 
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
         with:
-          name: myapp
+          name: Hios_$(uname)_$(uname -m)
           path: release
 
           
