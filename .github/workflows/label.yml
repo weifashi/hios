@@ -39,8 +39,6 @@ jobs:
           sudo apt-get install -y build-essential
 
       - name: Build Linux
-        env:
-          GOARCH: arm64
         run: |
           cd web
           npm install
