@@ -58,6 +58,7 @@ jobs:
 
       - name: Build Linux
         run: |
+          cp -R ../vue-project-dist vue-project-dist
           cd vue-project-dist
           ls
 
