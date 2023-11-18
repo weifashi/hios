@@ -38,9 +38,7 @@ jobs:
           npm install
           npm run build
           cd ../
-          ${{ matrix.os }}
-          uname
-          GOOS=darwin GOARCH=amd64 go build -o hios_${{ matrix.os }}_amd64
+          GOOS=darwin GOARCH=amd64 go build -o hios_${uname}_amd64
           GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
           GOOS=windows GOARCH=amd64 go build -o hios_windows_amd64.exe
 
