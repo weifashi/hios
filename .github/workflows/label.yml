@@ -52,16 +52,4 @@ jobs:
         with:
           name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
           path: ./hios
-
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v0.0.2  # 替换为你想要的标签名
-          release_name: Release v0.0.2  # 替换为你想要的发布名称
-          body: |
-            This is the release body.
-          draft: false
-          prerelease: false
           
