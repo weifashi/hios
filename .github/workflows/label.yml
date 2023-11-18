@@ -38,7 +38,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential
 
-      - name: Build Linux
+      - name: Build ${{ matrix.os }} ${{ matrix.platform }}
         run: |
           cd web
           npm install
@@ -46,7 +46,8 @@ jobs:
           cd ../
           archs=$(uname -m)
           echo hios_${uname}_${archs}
-          go build -o hios_${uname}_${archs}
+          echo hios_${{ matrix.os }}_${{ matrix.platform }}
+          go build -o hios_${{ matrix.os }}_${{ matrix.platform }}
         #   GOOS=linux GOARCH=amd64 go build -o hios_linux_amd64
         #   GOOS=windows GOARCH=amd64 go build -o hios_windows_amd64.exe
 
