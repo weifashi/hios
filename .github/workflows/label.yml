@@ -45,6 +45,15 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Hios_${{ matrix.os }}_${{ matrix.platform }}
-          path: release
+          path: release/Hios_$(uname)_$(uname -m)
 
+    #   - name: Upload Release Asset
+    #     uses: actions/upload-release-asset@v1
+    #     with:
+    #       asset_path: ./myapp
+    #       asset_name: myapp
+    #       asset_content_type: application/octet-stream
+    #       tag_name: v1.0.0
+    #       tag_message: Release v1.0.0
+    #       repo_token: ${{ secrets.GITHUB_TOKEN }}
           
