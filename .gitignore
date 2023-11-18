@@ -5,7 +5,7 @@ test.*
 main
 /tmp/
 /public/uploads/
-# .env
+.env
 output.log
 wsc.log
 work
