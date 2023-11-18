@@ -57,8 +57,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0  # 替换为你想要的标签名
-          release_name: Release v1.0.0  # 替换为你想要的发布名称
+          tag_name: v0.0.2  # 替换为你想要的标签名
+          release_name: Release v0.0.2  # 替换为你想要的发布名称
           body: |
             This is the release body.
           draft: false
