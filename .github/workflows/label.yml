@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
-        platform: [amd64, arm64]
+        os: [macOS-latest]
+        platform: [arm64]
         
     steps:
       - name: Checkout code
@@ -43,7 +43,7 @@ jobs:
           npm install
           npm run build
           cd ../
-          go build -o hios
+          env CGO_ENABLED=1 go build -o hios
           echo "build success"
 
       - name: Archive Golang binary
