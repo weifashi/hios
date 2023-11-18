@@ -44,7 +44,7 @@ jobs:
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
         with:
-          name: Hios_$(uname)_$(uname -m)
+          name: Hios_${{ matrix.os }}_${{ matrix.platform }}
           path: release
 
           
