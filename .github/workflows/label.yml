@@ -41,11 +41,15 @@ jobs:
           cd ../
 
           go build -o hios
+    
+      - name: Get OS
+        id: set_os
+        run: echo "::set-output name=os::$(uname -s)"
 
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
         with:
-          name: Hios_$(uname -s)_${{ matrix.platform }}
+          name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
           path: ./hios
 
     #   - name: Upload Release Asset
