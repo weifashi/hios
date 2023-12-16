@@ -45,7 +45,7 @@ jobs:
           if [ "$os_kernel" = "Darwin" ]; then
             env CGO_ENABLED=1 go build -trimpath -ldflags "-s -w -extldflags '-static'" -o hios
           else
-            env CGO_ENABLED=1 go build -o hios
+            env CGO_ENABLED=1 go build -trimpath -o hios
           fi
           echo "build success"
 
