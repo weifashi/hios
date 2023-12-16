@@ -3,15 +3,11 @@
 name: Go Build
 
 on:
-    push:
-      tags:
-          - '*'
-# on:
-#   release:
-#     types:
-#     - created
-#     - prereleased
-#     - released
+  release:
+    types:
+    # - created
+    # - prereleased
+    - released
 
 jobs:
   build:
@@ -58,39 +54,12 @@ jobs:
           name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
           path: ./hios
 
-    #   - name: Upload Artifact
-    #     uses: actions/upload-release-asset@v1
-    #     env:
-    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     with:
-    #       upload_url: ${{ github.event.release.upload_url }}
-    #       asset_path: ./hios
-    #       asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
-    #       asset_content_type: application/zip
-
-      - name: Get tag information
-        id: tag
-        uses: actions/github-script@v3.2.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            async function getTagInfo() {
-                const response = await github.repos.getReleaseByTag({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    tag: context.ref.replace('refs/tags/', '')
-                });
-                return response.data.upload_url;
-            }
-            const uploadUrl = await getTagInfo();
-            console.log('Upload URL:', uploadUrl);
-     
       - name: Upload Artifact
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.tag.outputs.upload_url }}
+          upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./hios
           asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
           asset_content_type: application/zip
