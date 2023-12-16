@@ -106,7 +106,7 @@ check_web_dist: check_node_modules
 #     archs="arm64"
 # fi
 # rm -rf hios_${os}_${archs}.tar.gz
-# wget "https://gitee.com/weifashi/hios/raw/v0.0.1/release/hios_${os}_${archs}.tar.gz"
+# wget "https://gitee.com/weifashi/hios/raw/v0.0.1/release/Hios_${os}_${archs}.tar.gz"
 # tar -zxf hios_${os}_${archs}.tar.gz
 # rm -rf hios_${os}_${archs}.tar.gz
 # mkdir /usr/lib/weifashi
@@ -114,3 +114,14 @@ check_web_dist: check_node_modules
 # mv ./release/hios /usr/lib/weifashi/hios
 # rm -r ./release
 # chmod +x /usr/lib/weifashi/hios
+
+# os=$(uname -s)
+# archs=$(uname -m);
+# if [[ "$archs" == "x86_64" ]]; then
+#     archs="amd64"
+# elif [[ "$archs" == "aarch64" ]]; then
+#     archs="arm64"
+# fi
+# rm -rf Hios_${os}_${archs}
+# wget "https://github.com/weifashi/hios/releases/download/v1.0.0/Hios_${os}_${archs}"
+# chmod +x ./Hios_${os}_${archs}

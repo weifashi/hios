@@ -35,19 +35,19 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Get OS
-        id: set_os
-        run: echo "::set-output name=os::$(uname -s)"
-
       - name: Build ${{ matrix.os }} ${{ matrix.platform }}
         run: |
           cd web
           npm install
           npm run build
           cd ../
-          env CGO_ENABLED=1 go build -o hios
+          env CGO_ENABLED=1 go build -trimpath -ldflags "-s -w -extldflags '-static'" -o hios
           echo "build success"
 
+      - name: Get OS
+        id: set_os
+        run: echo "::set-output name=os::$(uname -s)"
+    
       - name: Archive Golang binary
         uses: actions/upload-artifact@v2
         with:
