@@ -74,7 +74,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { context, github } = require('@actions/github');
+            var { context, github } = require('@actions/github');
             async function getTagInfo() {
                 const response = await github.repos.getReleaseByTag({
                     owner: context.repo.owner,
