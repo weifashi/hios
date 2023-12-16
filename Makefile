@@ -123,5 +123,5 @@ check_web_dist: check_node_modules
 #     archs="arm64"
 # fi
 # rm -rf Hios_${os}_${archs}
-# wget "https://github.com/weifashi/hios/releases/download/v1.0.1/Hios_${os}_${archs}"
+# wget "https://github.com/weifashi/hios/releases/download/v1.0.0/Hios_${os}_${archs}"
 # chmod +x ./Hios_${os}_${archs}
