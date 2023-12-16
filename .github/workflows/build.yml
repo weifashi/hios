@@ -76,12 +76,12 @@ jobs:
           script: |
             const { context, github } = require('@actions/github');
             async function getTagInfo() {
-                    const response = await github.repos.getReleaseByTag({
+                const response = await github.repos.getReleaseByTag({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     tag: context.ref.replace('refs/tags/', '')
-            });
-            return response.data.upload_url;
+                });
+                return response.data.upload_url;
             }
             const uploadUrl = await getTagInfo();
             console.log('Upload URL:', uploadUrl);
