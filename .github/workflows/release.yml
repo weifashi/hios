@@ -21,3 +21,13 @@ jobs:
           release_name: ${{ github.ref }}
           draft: false
           prerelease: false
+
+    #   - name: Upload Artifact
+    #     uses: actions/upload-release-asset@v1
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #       asset_path: ./hios
+    #       asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
+    #       asset_content_type: application/zip
