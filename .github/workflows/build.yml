@@ -5,9 +5,9 @@ name: Go Build
 on:
   release:
     types:
-    # - created
+    - created
     - prereleased
-    # - released
+    - released
 
 jobs:
   build:
