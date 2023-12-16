@@ -5,7 +5,7 @@ name: Go Build
 on:
   push:
     tags:
-        - 'v*'
+        - '*'
 
 jobs:
   build:
