@@ -1,0 +1,85 @@
+# .github/workflows/build.yml
+
+name: Go Build
+
+on:
+  release:
+    types:
+    - created
+    - prereleased
+    - released
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        platform: [amd64,arm64]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Get OS
+        id: set_os
+        run: echo "::set-output name=os::$(uname -s)"
+
+      - name: Build ${{ matrix.os }} ${{ matrix.platform }}
+        run: |
+          cd web
+          npm install
+          npm run build
+          cd ../
+          env CGO_ENABLED=1 go build -o hios
+          echo "build success"
+
+      - name: Archive Golang binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
+          path: ./hios
+
+      - name: Upload Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./hios
+          asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
+          asset_content_type: application/zip
+
+    #   - name: Create Release
+    #     id: create_release
+    #     uses: actions/create-release@v1
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       tag_name: ${{ github.ref }}
+    #       release_name: Release ${{ github.ref }}
+    #       draft: false
+
+    #   - name: Upload Artifact
+    #     uses: actions/upload-release-asset@v1
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #       asset_path: ./hios
+    #       asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
+    #       asset_content_type: application/zip
