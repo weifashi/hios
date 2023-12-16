@@ -6,6 +6,8 @@ on:
   release:
     types:
     - created
+    - prereleased
+    - released
 
 jobs:
   build:
