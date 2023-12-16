@@ -3,9 +3,9 @@
 name: Go Build
 
 on:
-  push:
-    tags:
-        - '*'
+  release:
+    types:
+    - created
 
 jobs:
   build:
@@ -51,3 +51,24 @@ jobs:
         with:
           name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
           path: ./hios
+
+    #   - name: Create Release
+    #     id: create_release
+    #     uses: actions/create-release@v1
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       tag_name: ${{ github.ref }}
+    #       release_name: Release ${{ github.ref }}
+    #       draft: false
+
+      - name: Upload Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+        #   upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./hios
+          asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
+          asset_content_type: application/zip
