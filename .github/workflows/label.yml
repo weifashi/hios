@@ -52,16 +52,22 @@ jobs:
           name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
           path: ./hios
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
-          path: ./hios
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
 
-    #   - name: Upload asset
-    #     uses: actions/upload-release-asset@v1
-    #     with:
-    #       asset_path: ./path/to/your/build
-    #       asset_name: YourAssetName.zip
-    #       repository_token: ${{ secrets.GITHUB_TOKEN }}
-          
+      - name: Upload Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./hios
+          asset_name: Hios_${{ steps.set_os.outputs.os }}_${{ matrix.platform }}
+          asset_content_type: application/zip
