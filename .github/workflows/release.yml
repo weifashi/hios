@@ -8,7 +8,7 @@ on:
         - '*'
 
 jobs:
-  tag_and_release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Create Release
@@ -20,3 +20,4 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: false
+          prerelease: true
