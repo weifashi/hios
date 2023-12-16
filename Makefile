@@ -56,7 +56,7 @@ release: | ; $(info $(M) release all…)
 		target_suffix=$${os}_$${arch};\
 		$(GOCGO) GOOS=$${os} GOARCH=$${arch} GOMIPS=$${gomips} go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/$(MODULE);\
 		tar zcf ./release/$(MODULE)_$${target_suffix}.tar.gz ./release/$(MODULE);\
-		# rm -r ./release/$(MODULE);\
+		rm -r ./release/$(MODULE);\
 	)
 
 ## docker-release
@@ -123,5 +123,5 @@ check_web_dist: check_node_modules
 #     archs="arm64"
 # fi
 # rm -rf Hios_${os}_${archs}
-# wget "https://github.com/weifashi/hios/releases/download/v1.0.0/Hios_${os}_${archs}"
+# wget "https://github.com/weifashi/hios/releases/download/v1.0.1/Hios_${os}_${archs}"
 # chmod +x ./Hios_${os}_${archs}
