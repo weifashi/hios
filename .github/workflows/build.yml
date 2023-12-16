@@ -42,10 +42,10 @@ jobs:
           npm run build
           cd ../
           os_kernel=$(uname -s)
-          if [ "$os_kernel" = "Darwin" ]; then
-            env CGO_ENABLED=1 go build -trimpath -ldflags "-s -w -extldflags '-static'" -o hios
-          else
+          if [[ "$os_kernel" = "Darwin" ]]; then
             env CGO_ENABLED=1 go build -trimpath -o hios
+          else
+            env CGO_ENABLED=1 go build -trimpath -ldflags "-s -w -extldflags '-static'" -o hios
           fi
           echo "build success"
 
