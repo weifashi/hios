@@ -27,7 +27,8 @@ dev: check_node_modules
 ## build
 .PHONY: build
 build: check_node_modules
-	env CGO_ENABLED=1 go build -trimpath -o ./$(MODULE)
+	cd web && npm run build && cd ../
+	go build -o ./$(MODULE)
 
 ## build-run
 .PHONY: build-run
