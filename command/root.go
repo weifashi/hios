@@ -34,7 +34,7 @@ var rootCommand = &cobra.Command{
 			config.CONF.System.Host = "0.0.0.0"
 		}
 		if config.CONF.System.Port == "" {
-			config.CONF.System.Port = "3376"
+			config.CONF.System.Port = "30376"
 		}
 		if config.CONF.System.Cache == "" {
 			config.CONF.System.Cache = common.RunDir("/.cache")
@@ -114,9 +114,9 @@ var rootCommand = &cobra.Command{
 func Execute() {
 	godotenv.Load(".env")
 	rootCommand.CompletionOptions.DisableDefaultCmd = true
-	rootCommand.Flags().StringVar(&config.CONF.System.Host, "host", os.Getenv("HOST"), "主机名，默认：0.0.0.0")
-	rootCommand.Flags().StringVar(&config.CONF.System.Port, "port", os.Getenv("PORT"), "端口号，默认：3376")
-	rootCommand.Flags().StringVar(&config.CONF.System.Mode, "mode", os.Getenv("MODE"), "运行模式，可选：debug|test|release")
+	rootCommand.Flags().StringVar(&config.CONF.System.Host, "host", os.Getenv("HIOS_HOST"), "主机名，默认：0.0.0.0")
+	rootCommand.Flags().StringVar(&config.CONF.System.Port, "port", os.Getenv("HIOS_PORT"), "端口号，默认：30376")
+	rootCommand.Flags().StringVar(&config.CONF.System.Mode, "mode", os.Getenv("HIOS_MODE"), "运行模式，可选：debug|test|release")
 	rootCommand.Flags().StringVar(&config.CONF.System.Cache, "cache", "", "数据缓存目录，默认：{RunDir}/.cache")
 	rootCommand.Flags().StringVar(&config.CONF.System.WssUrl, "wss", "", "服务端生成的url")
 	rootCommand.Flags().StringVar(&config.CONF.System.Dsn, "dsn", "", "数据来源名称，如：sqlite://{CacheDir}/database.db")
