@@ -20,7 +20,6 @@ import (
 var (
 	ws      *wsc.Wsc
 	FileMd5 sync.Map
-	workDir = "work"
 )
 
 type msgModel struct {
@@ -65,7 +64,7 @@ type callModel struct {
 // WorkStart Work开始
 func WorkStart() {
 	//
-	logger.SetLogger(`{"File":{"filename":"./work/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`)
+	logger.SetLogger(fmt.Sprintf(`{"File":{"filename":"./%s/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`))
 	//
 	origin := strings.Replace(config.CONF.System.WssUrl, "https://", "wss://", 1)
 	origin = strings.Replace(origin, "http://", "ws://", 1)
@@ -171,7 +170,7 @@ func handleMessageFile(fileData fileModel, force bool) (string, error) {
 	var err error
 	var output string
 	if !strings.HasPrefix(fileData.Path, "/") {
-		fileData.Path = fmt.Sprintf("%s/%s", workDir, fileData.Path)
+		fileData.Path = fmt.Sprintf("%s/%s", config.WorkDir, fileData.Path)
 	}
 	fileDir := filepath.Dir(fileData.Path)
 	if !common.Exists(fileDir) {

@@ -6,6 +6,7 @@ type System struct {
 	Port   string `mapstructure:"port"`
 	Cache  string `mapstructure:"cache"`
 	Dsn    string `mapstructure:"dsn"`
+	Prefix string `mapstructure:"prefix"`
 	Start  string `mapstructure:"start"`
 	WssUrl string `mapstructure:"wss_url"`
 }

@@ -39,7 +39,7 @@ var rootCommand = &cobra.Command{
 		if config.CONF.System.Cache == "" {
 			config.CONF.System.Cache = common.RunDir("/.cache")
 		}
-		if config.CONF.System.Dsn == "" {
+		if config.CONF.System.Dsn == "mysql://:@tcp(:)/?charset=utf8mb4&parseTime=True&loc=Local" {
 			config.CONF.System.Dsn = fmt.Sprintf("sqlite3://%s/%s", config.CONF.System.Cache, "database.db")
 		}
 		config.CONF.System.Start = time.Now().Format(common.YYYY_MM_DD_HH_MM_SS)
@@ -62,8 +62,8 @@ var rootCommand = &cobra.Command{
 			os.Exit(1)
 		}
 		// 初始化工作目录
-		common.Mkdir("work", 0777)
-		common.Mkdir("work/logs", 0777)
+		common.Mkdir(config.WorkDir, 0777)
+		common.Mkdir(config.WorkDir+"/logs", 0777)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// 连接服务端
@@ -85,7 +85,7 @@ var rootCommand = &cobra.Command{
 			}
 
 			// 设置日志输出到文件
-			file, _ := os.OpenFile("./work/logs/request.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+			file, _ := os.OpenFile("./"+config.WorkDir+"/logs/request.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 			defer file.Close()
 			gin.DefaultWriter = file
 			gin.DefaultErrorWriter = file
@@ -114,27 +114,25 @@ var rootCommand = &cobra.Command{
 func Execute() {
 	godotenv.Load(".env")
 	rootCommand.CompletionOptions.DisableDefaultCmd = true
-	rootCommand.Flags().StringVar(&config.CONF.System.Host, "host", os.Getenv("HIOS_HOST"), "主机名，默认：0.0.0.0")
-	rootCommand.Flags().StringVar(&config.CONF.System.Port, "port", os.Getenv("HIOS_PORT"), "端口号，默认：30376")
-	rootCommand.Flags().StringVar(&config.CONF.System.Mode, "mode", os.Getenv("HIOS_MODE"), "运行模式，可选：debug|test|release")
-	rootCommand.Flags().StringVar(&config.CONF.System.Cache, "cache", "", "数据缓存目录，默认：{RunDir}/.cache")
-	rootCommand.Flags().StringVar(&config.CONF.System.WssUrl, "wss", "", "服务端生成的url")
-	//
-	mysqlDsn := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	flags := rootCommand.Flags()
+	if os.Getenv("HIOS_WORKDIR") != "" {
+		flags.StringVar(&config.WorkDir, "workDir", os.Getenv("HIOS_WORKDIR"), "工作目录")
+	}
+	flags.StringVar(&config.CONF.System.Host, "host", os.Getenv("HIOS_HOST"), "主机名，默认：0.0.0.0")
+	flags.StringVar(&config.CONF.System.Port, "port", os.Getenv("HIOS_PORT"), "端口号，默认：30376")
+	flags.StringVar(&config.CONF.System.Mode, "mode", os.Getenv("HIOS_MODE"), "运行模式，可选：debug|test|release")
+	flags.StringVar(&config.CONF.System.Cache, "cache", os.Getenv("HIOS_CACHE"), "数据缓存目录，默认：{RunDir}/.cache")
+	flags.StringVar(&config.CONF.System.WssUrl, "wss", os.Getenv("HIOS_WSS"), "服务端生成的url")
+	flags.StringVar(&config.CONF.Jwt.SecretKey, "secret_key", "base64:ONdadQs1W4pY3h3dzr1jUSPrqLdsJQ9tCBZnb7HIDtk=", "jwt密钥")
+	flags.StringVar(&config.CONF.Redis.RedisUrl, "redis_url", "redis://localhost:56379", "RedisUrl")
+	flags.StringVar(&config.CONF.System.Prefix, "prefix", os.Getenv("HIOS_MYSQL_Prefix"), "数据前缀")
+	flags.StringVar(&config.CONF.System.Dsn, "dsn", fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		os.Getenv("HIOS_MYSQL_USERNAME"),
 		os.Getenv("HIOS_MYSQL_PASSWORD"),
 		os.Getenv("HIOS_MYSQL_HOST"),
 		os.Getenv("HIOS_MYSQL_PORT"),
 		os.Getenv("HIOS_MYSQL_DBNAME"),
-	)
-	if mysqlDsn != "mysql://:@tcp(:)/?charset=utf8mb4&parseTime=True&loc=Local" {
-		rootCommand.Flags().StringVar(&config.CONF.System.Dsn, "dsn", mysqlDsn, "数据来源名称，如：sqlite://{CacheDir}/database.db")
-	} else {
-		rootCommand.Flags().StringVar(&config.CONF.System.Dsn, "dsn", "", "数据来源名称，如：sqlite://{CacheDir}/database.db")
-	}
-	//
-	rootCommand.Flags().StringVar(&config.CONF.Jwt.SecretKey, "secret_key", "base64:ONdadQs1W4pY3h3dzr1jUSPrqLdsJQ9tCBZnb7HIDtk=", "jwt密钥")
-	rootCommand.Flags().StringVar(&config.CONF.Redis.RedisUrl, "redis_url", "redis://localhost:56379", "RedisUrl")
+	), "数据来源名称，如：sqlite://{CacheDir}/database.db")
 	if err := rootCommand.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
