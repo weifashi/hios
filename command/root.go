@@ -119,7 +119,20 @@ func Execute() {
 	rootCommand.Flags().StringVar(&config.CONF.System.Mode, "mode", os.Getenv("HIOS_MODE"), "运行模式，可选：debug|test|release")
 	rootCommand.Flags().StringVar(&config.CONF.System.Cache, "cache", "", "数据缓存目录，默认：{RunDir}/.cache")
 	rootCommand.Flags().StringVar(&config.CONF.System.WssUrl, "wss", "", "服务端生成的url")
-	rootCommand.Flags().StringVar(&config.CONF.System.Dsn, "dsn", "", "数据来源名称，如：sqlite://{CacheDir}/database.db")
+	//
+	mysqlDsn := fmt.Sprintf("mysql://%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		os.Getenv("HIOS_MYSQL_USERNAME"),
+		os.Getenv("HIOS_MYSQL_PASSWORD"),
+		os.Getenv("HIOS_MYSQL_HOST"),
+		os.Getenv("HIOS_MYSQL_PORT"),
+		os.Getenv("HIOS_MYSQL_DBNAME"),
+	)
+	if mysqlDsn != "mysql://:@tcp(:)/?charset=utf8mb4&parseTime=True&loc=Local" {
+		rootCommand.Flags().StringVar(&config.CONF.System.Dsn, "dsn", mysqlDsn, "数据来源名称，如：sqlite://{CacheDir}/database.db")
+	} else {
+		rootCommand.Flags().StringVar(&config.CONF.System.Dsn, "dsn", "", "数据来源名称，如：sqlite://{CacheDir}/database.db")
+	}
+	//
 	rootCommand.Flags().StringVar(&config.CONF.Jwt.SecretKey, "secret_key", "base64:ONdadQs1W4pY3h3dzr1jUSPrqLdsJQ9tCBZnb7HIDtk=", "jwt密钥")
 	rootCommand.Flags().StringVar(&config.CONF.Redis.RedisUrl, "redis_url", "redis://localhost:56379", "RedisUrl")
 	if err := rootCommand.Execute(); err != nil {
