@@ -39,6 +39,9 @@ var rootCommand = &cobra.Command{
 		if config.CONF.System.Cache == "" {
 			config.CONF.System.Cache = common.RunDir("/.cache")
 		}
+		if config.CONF.System.Prefix == "" {
+			config.CONF.System.Prefix = "xw_hios_"
+		}
 		if config.CONF.System.Dsn == "mysql://:@tcp(:)/?charset=utf8mb4&parseTime=True&loc=Local" {
 			config.CONF.System.Dsn = fmt.Sprintf("sqlite3://%s/%s", config.CONF.System.Cache, "database.db")
 		}

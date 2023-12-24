@@ -1,6 +1,7 @@
 package database
 
 import (
+	"hios/config"
 	"hios/core"
 	"hios/database/migrations"
 	"reflect"
@@ -51,7 +52,7 @@ func Init() error {
 	})
 	//
 	defaultOptions := &gormigrate.Options{
-		TableName:                 "xw_hios_migrations",
+		TableName:                 config.CONF.System.Prefix + "migrations",
 		IDColumnName:              "id",
 		IDColumnSize:              255,
 		UseTransaction:            false,
