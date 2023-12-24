@@ -64,7 +64,7 @@ type callModel struct {
 // WorkStart Work开始
 func WorkStart() {
 	//
-	logger.SetLogger(fmt.Sprintf(`{"File":{"filename":"./%s/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`))
+	logger.SetLogger(fmt.Sprintf(`{"File":{"filename":"./%s/logs/wsc.log","level":"TRAC","daily":true,"maxlines":100000,"maxsize":10,"maxdays":3,"append":true,"permit":"0660"}}`, config.WorkDir))
 	//
 	origin := strings.Replace(config.CONF.System.WssUrl, "https://", "wss://", 1)
 	origin = strings.Replace(origin, "http://", "ws://", 1)
