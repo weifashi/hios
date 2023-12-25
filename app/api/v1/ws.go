@@ -200,7 +200,7 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	})
 
 	// 通知上线
-	go core.GlobalEventBus.Publish("Task.LineTask.Start", client.Uid, true)
+	go core.GlobalEventBus.Publish("Task.LineTask.Start", client.Uid, true, int(client.Rid), client.Ip)
 
 	// 推送离线时收到的消息
 	go core.GlobalEventBus.Publish("Task.PushTask.Start", "RETRY::"+client.Uid)
@@ -215,7 +215,7 @@ func (api *BaseApi) wsOfflineClients(rid int32) {
 			core.WsClients = append(core.WsClients[:k], core.WsClients[k+1:]...)
 			_ = client.Conn.Close()
 			// 通知离线
-			go core.GlobalEventBus.Publish("Task.LineTask.Start", client.Uid, false)
+			go core.GlobalEventBus.Publish("Task.LineTask.Start", client.Uid, false, int(client.Rid), client.Ip)
 			// 清除用户
 			service.WebSocketService.DeleteUser(int(client.Rid))
 			// 客户端离线

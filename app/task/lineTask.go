@@ -5,7 +5,10 @@ import (
 	"hios/app/model"
 	"hios/core"
 	"log"
+	"net/http"
+	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -21,7 +24,7 @@ func init() {
 
 // uid: 用户的 ID。
 // online: 用户的上线/离线状态 true: 上线，false: 离线。
-func (t lineTask) Start(uid string, online bool) {
+func (t lineTask) Start(uid string, online bool, wsFd int, ip string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -48,9 +51,23 @@ func (t lineTask) Start(uid string, online bool) {
 			},
 		})
 	}
-	if len(endPush) == 0 {
-		return
-	}
+
 	// 推送信息
-	PushTask.Start(endPush)
+	if len(endPush) > 0 {
+		PushTask.Start(endPush)
+	}
+
+	// 通知外部
+	url := os.Getenv("HIOS_ONLINE_URL")
+	if url != "" {
+		line := "false"
+		if online {
+			line = "true"
+		}
+		if strings.Contains(url, "?") {
+			go http.Get(url + "&online=" + line + "&uid=" + uid + "&fd=" + strconv.Itoa(wsFd) + "&ip=" + ip)
+		} else {
+			go http.Get(url + "?online=" + line + "&uid=" + uid + "&fd=" + strconv.Itoa(wsFd) + "&ip=" + ip)
+		}
+	}
 }

@@ -59,7 +59,7 @@ type callModel struct {
 	Err    string `json:"err"`
 }
 
-// go run main.go --wss='ws://127.0.0.1:3376/api/v1/ws?type=none'
+// go run main.go --wss='ws://127.0.0.1:3376/api/v1/ws?type=node'
 //
 // WorkStart Work开始
 func WorkStart() {
