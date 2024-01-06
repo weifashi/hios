@@ -59,10 +59,12 @@ func (api *BaseApi) Ws() {
 		return
 	}
 	//
-	t := time.Now()
-	singModel.UseAt = &t
-	singModel.Md5 = common.StringMd5(useragent + uid)
-	core.DB.Save(singModel)
+	if singModel.UseAt == nil {
+		t := time.Now()
+		singModel.UseAt = &t
+		singModel.Md5 = common.StringMd5(useragent + uid)
+		core.DB.Save(singModel)
+	}
 
 	//
 	wsRid++
