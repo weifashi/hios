@@ -38,6 +38,7 @@ func (api *BaseApi) Ws() {
 	useragent := api.Context.Request.UserAgent()
 	types := api.Context.DefaultQuery("type", constant.WsIsUnknown)
 	uid := api.Context.DefaultQuery("uid", common.StringMd5(api.Context.ClientIP()))
+	t := time.Now()
 	//
 	if api.Context.Request.Header.Get("Upgrade") != "websocket" {
 		helper.ApiResponse.Error(api.Context, constant.ErrNotSupport)
@@ -54,11 +55,11 @@ func (api *BaseApi) Ws() {
 		helper.ApiResponse.Error(api.Context, constant.ErrConnFailed, err)
 		return
 	}
-	if singModel.Use && singModel.Md5 != common.StringMd5(useragent+uid) {
+	if singModel.UseAt != nil && singModel.Md5 != common.StringMd5(useragent+uid) {
 		helper.ApiResponse.Error(api.Context, constant.ErrConnFailed)
 		return
 	}
-	singModel.Use = true
+	singModel.UseAt = &t
 	singModel.Md5 = common.StringMd5(useragent + uid)
 	core.DB.Save(singModel)
 
