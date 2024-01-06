@@ -30,12 +30,12 @@ var sysCmd = &cobra.Command{
 			config.CONF.System.Host = "0.0.0.0"
 		}
 		if config.CONF.System.Port == "" {
-			config.CONF.System.Port = "3376"
+			config.CONF.System.Port = "30376"
 		}
 		if config.CONF.System.Cache == "" {
 			config.CONF.System.Cache = common.RunDir("/.cache")
 		}
-		if config.CONF.System.Dsn == "" {
+		if config.CONF.System.Dsn == "mysql://:@tcp(:)/?charset=utf8mb4&parseTime=True&loc=Local" {
 			config.CONF.System.Dsn = fmt.Sprintf("sqlite3://%s/%s", config.CONF.System.Cache, "database.db")
 		}
 		config.CONF.System.Start = time.Now().Format(common.YYYY_MM_DD_HH_MM_SS)
