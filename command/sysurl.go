@@ -60,6 +60,6 @@ var sysCmd = &cobra.Command{
 	},
 	Run: func(c *cobra.Command, args []string) {
 		result := service.ClientService.CreateUrl(types, uid)
-		common.PrintSuccess(result)
+		fmt.Print(result)
 	},
 }
