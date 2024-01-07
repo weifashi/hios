@@ -190,7 +190,7 @@ func (api *BaseApi) wsOnlineClients(client interfaces.WsClient) {
 	core.WsClients = append(core.WsClients, client)
 
 	// 保存用户
-	service.WebSocketService.SaveUser(int(client.Rid), client.Uid)
+	service.WebSocketService.SaveUser(int(client.Rid), client.Uid, client.Type)
 
 	// 客户端上线
 	service.ClientService.GoLive(client.Uid, client.Ip, client.Type)

@@ -15,7 +15,7 @@ var WebSocketService = webSocketService{}
 type webSocketService struct{}
 
 // SaveUser 保存用户
-func (ws webSocketService) SaveUser(fd int, uid string) {
+func (ws webSocketService) SaveUser(fd int, uid string, source string) {
 	// 一天后过期
 	cacheExpiration := 24 * time.Hour
 	cacheKeyFD := fmt.Sprintf("User::fd:%d", fd)
@@ -25,12 +25,21 @@ func (ws webSocketService) SaveUser(fd int, uid string) {
 	// 保存
 	key := md5.Sum([]byte(fmt.Sprintf("%d@%s", fd, uid)))
 	keyStr := hex.EncodeToString(key[:])
-	model.WebSocketModel.UpdateInsert(map[string]interface{}{
-		"uid": uid,
-	}, map[string]interface{}{
-		"fd":  fd,
-		"key": keyStr,
-	})
+	if source == "node" {
+		model.WebSocketModel.UpdateInsert(map[string]interface{}{
+			"uid": uid,
+		}, map[string]interface{}{
+			"fd":  fd,
+			"key": keyStr,
+		})
+	} else {
+		model.WebSocketModel.UpdateInsert(map[string]interface{}{
+			"key": keyStr,
+		}, map[string]interface{}{
+			"uid": uid,
+			"fd":  fd,
+		})
+	}
 }
 
 // DeleteUser 清除用户
