@@ -2,6 +2,7 @@
 参数错误: Kesalahan parameter
 发送邮箱未配置: Email pengirim tidak dikonfigurasi
 命令执行超时: Batas waktu eksekusi perintah
+响应超时: Batas waktu respons habis
 当前环境禁止此操作: Operasi ini dilarang di lingkungan saat ini
 成功: kesuksesan
 无权限: Tidak ada izin

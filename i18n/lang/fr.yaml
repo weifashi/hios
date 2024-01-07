@@ -2,6 +2,7 @@
 参数错误: Erreur de paramètre
 发送邮箱未配置: L'email d'envoi n'est pas configuré
 命令执行超时: Délai d'exécution de la commande
+响应超时: Délai de réponse
 当前环境禁止此操作: Cette opération est interdite dans le contexte actuel
 成功: succès
 无权限: Aucune autorisation

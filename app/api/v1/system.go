@@ -57,7 +57,6 @@ func (api *BaseApi) Seed() {
 					},
 				},
 			})
-
 			// 30秒超时
 			for i := 0; i < 300; i++ {
 				time.Sleep(100 * time.Millisecond)
@@ -71,10 +70,9 @@ func (api *BaseApi) Seed() {
 					return
 				}
 			}
-
-			helper.ApiResponse.Error(api.Context, "参数错误")
+			//
+			helper.ApiResponse.Error(api.Context, "响应超时")
 			return
-
 		} else {
 			core.GlobalEventBus.Publish("Task.PushTask.Start", map[string]any{
 				"uid": param.Uid,

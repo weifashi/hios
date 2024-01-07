@@ -2,6 +2,7 @@
 参数错误: Parameter error
 发送邮箱未配置: The sending email is not configured
 命令执行超时: Command execution timeout
+响应超时: Response timeout
 当前环境禁止此操作: This operation is prohibited in the current environment
 成功: success
 无权限: No permission
