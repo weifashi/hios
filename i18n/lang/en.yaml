@@ -1,2 +1,11 @@
+不支持的请求方式: Unsupported request method
 参数错误: Parameter error
+发送邮箱未配置: The sending email is not configured
+命令执行超时: Command execution timeout
+当前环境禁止此操作: This operation is prohibited in the current environment
 成功: success
+无权限: No permission
+未登录: Not logged in
+请求超时: Request timed out
+连接失败: Connection failed
+验证码错误: Verification code error

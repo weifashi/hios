@@ -1,2 +1,11 @@
+不支持的请求方式: Nicht unterstützte Anforderungsmethode
 参数错误: Parameterfehler
+发送邮箱未配置: Die sendende E-Mail ist nicht konfiguriert
+命令执行超时: Zeitüberschreitung bei der Befehlsausführung
+当前环境禁止此操作: Dieser Vorgang ist in der aktuellen Umgebung verboten
 成功: Erfolg
+无权限: Keine Erlaubnis
+未登录: Nicht eingeloggt
+请求超时: Zeitüberschreitung der Anforderung
+连接失败: Verbindung fehlgeschlagen
+验证码错误: Fehler beim Bestätigungscode

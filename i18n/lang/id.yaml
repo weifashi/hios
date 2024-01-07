@@ -1,2 +1,11 @@
+不支持的请求方式: Metode permintaan tidak didukung
 参数错误: Kesalahan parameter
+发送邮箱未配置: Email pengirim tidak dikonfigurasi
+命令执行超时: Batas waktu eksekusi perintah
+当前环境禁止此操作: Operasi ini dilarang di lingkungan saat ini
 成功: kesuksesan
+无权限: Tidak ada izin
+未登录: Belum masuk
+请求超时: Waktu permintaan habis
+连接失败: Koneksi gagal
+验证码错误: Kesalahan kode verifikasi
