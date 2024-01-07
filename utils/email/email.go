@@ -38,7 +38,7 @@ func NewEmailService(smtpServer string, port int, account string, password strin
 func (s *EmailService) MailGunSend(to string, subject string, body string) error {
 	// 验证收件人地址是否合法
 	if _, err := mail.ParseAddress(to); err != nil {
-		return e.New(constant.ErrMailToInvalid)
+		return e.New("请输入正确的收件人地址")
 	}
 
 	// 创建Mailgun客户端
