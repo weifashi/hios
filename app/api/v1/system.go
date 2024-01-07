@@ -42,7 +42,7 @@ func (api *BaseApi) Seed() {
 	if len(param.Uid) > 0 && len(param.Msg) > 0 {
 		if param.Source == "node" {
 			go core.GlobalEventBus.Publish("Task.PushTask.Start", map[string]any{
-				"uid": common.StringMd5("127.0.0.1"),
+				"uid": param.Uid,
 				"msg": map[string]any{
 					"type":  "file",
 					"md5":   msgMd5,
