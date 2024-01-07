@@ -25,9 +25,11 @@ func (ws webSocketService) SaveUser(fd int, uid string) {
 	// 保存
 	key := md5.Sum([]byte(fmt.Sprintf("%d@%s", fd, uid)))
 	keyStr := hex.EncodeToString(key[:])
-	model.WebSocketModel.UpdateInsert(map[string]interface{}{"key": keyStr}, map[string]interface{}{
-		"fd":  fd,
+	model.WebSocketModel.UpdateInsert(map[string]interface{}{
 		"uid": uid,
+	}, map[string]interface{}{
+		"fd":  fd,
+		"key": keyStr,
 	})
 }
 
